@@ -1,18 +1,19 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Container } from "react-bootstrap";
+import { Nav } from "react-bootstrap";
+import { Navbar } from "react-bootstrap";
 
-const Navbar = () => {
+function BasicNavbar() {
     return (
-      <nav className="navbar">
-        <h1>CabinetAi</h1>
-        <ul>
-          <li><Link to="/">Home</Link></li>
-          <li><Link to="/wunderchat-pre">Wunderchat</Link></li>
-          <li><Link to="/cabinetAI-pre">CabinetAI</Link></li>
-          <li><Link to="/profile">Profile</Link></li>
-        </ul>
-      </nav>
+      <Navbar variant="dark" style={{backgroundColor: 'darkblue', padding: '0'}}>
+            <Container style={{textAlign: 'left'}}>
+                <Navbar.Brand href="/">The Thinking Cabinet</Navbar.Brand>
+                <Nav.Link href="/wunderchat-pre" style={{fontSize: '17pt', color: 'white', fontWeight: 'bold', marginRight: '20px'}}>Wunderchat</Nav.Link>
+                <Nav.Link href="/cabinetAI-pre" style={{fontSize: '17pt', color: 'white', fontWeight: 'bold', marginRight: '20px'}}>CabinetAI</Nav.Link>
+                <Nav.Link href="/profile" style={{fontSize: '17pt', color: 'white', fontWeight: 'bold'}}>Profile</Nav.Link>
+            </Container>
+        </Navbar>
     );
   };
   
-  export default Navbar;
+  export default BasicNavbar;

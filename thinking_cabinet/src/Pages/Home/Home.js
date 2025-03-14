@@ -1,9 +1,17 @@
 import React from "react";
 
 function Home() {
-    <div className="">
-        <h1>Home</h1>
-    </div>
+    return (
+        <div className="App2">
+
+            <br/>
+
+            <h2 style={{marginLeft: '70px', fontWeight: 'bold', color: 'black', fontSize: '30pt'}}>Home</h2>
+
+            <br/>
+
+        </div>
+    )
 }
 
 export default Home;
