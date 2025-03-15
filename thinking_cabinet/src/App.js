@@ -26,27 +26,12 @@ function App() {
           }
         >
             <Route path='/' element= { <Home />} />
-            <Route path='/wunderchat-pre' element= { <WunderchatPre />} />
             <Route path='/cabinetAI-pre' element={<CabinetAIPre />} />
             <Route path='/profile' element={<Profile  />} />
         </Route>
         
       </Routes>
     </div>
-      // <div>
-      //     {/* <Navbar />
-      //     <Routes>
-      //       <Route path="/authentication" element={<Authentications />} />
-      //       <Route path="/" element={<Home />} />
-
-      //       <Route path="/wunderchat-pre" element={<WunderchatPre />} />
-      //       <Route path="/cabinetAI-pre" element={<CabinetAIPre />} />
-      //       <Route path="/profile" element={<Profile />} />
-
-      //       <Route path="/wunderchat-post" element={<WunderchatPost />} />
-      //       <Route path="/cabinetAI-post" element={<CabinetAIPost />} />
-      //     </Routes>  */}
-      // </div>
   );
 }
 
