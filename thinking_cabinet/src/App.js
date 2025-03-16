@@ -1,5 +1,5 @@
 import './App.css';
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import Authentications from './Pages/Authentication/Authentication';
 import Home from './Pages/Home/Home';
 import Profile from './Pages/Profile/Profile';
@@ -16,7 +16,7 @@ function App() {
   return (
     <div className="App">
       <Routes>
-        <Route path="/authentication" element={<Authentications />} />
+        <Route path="/" element={<Authentications />} />
         <Route
           element={
             <>
@@ -25,7 +25,7 @@ function App() {
             </>
           }
         >
-            <Route path='/' element= { <Home />} />
+            <Route path='/home' element= { <Home />} />
             <Route path='/cabinetAI-pre' element={<CabinetAIPre />} />
             <Route path='/profile' element={<Profile  />} />
         </Route>
