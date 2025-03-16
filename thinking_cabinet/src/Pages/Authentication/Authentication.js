@@ -13,13 +13,18 @@ function Authentications() {
     const handleSubmit = async (e) => {
       e.preventDefault();
       try {
-        await signUpUser(name, email, password); // Call service function
+        if (isSignUp) {
+            await signUpUser(name, email, password);
+          } else {
+            await loginUser(email, password);
+          }
         navigate("/home"); // Redirect to home page
       } catch (error) {
         setError(error.message); // Display error message
       }
     };
   
+
 
     return(
         <div className="App2">
