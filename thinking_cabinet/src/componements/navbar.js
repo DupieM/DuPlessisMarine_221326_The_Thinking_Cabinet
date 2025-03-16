@@ -37,9 +37,7 @@ function BasicNavbar() {
                         Logout
                     </Button>
                     ) : (
-                    <Nav.Link href="/authentication" style={{ fontSize: "17pt", color: "white", fontWeight: "bold" }}>
-                        Login
-                    </Nav.Link>
+                    <div></div>
                 )}
             </Container>
         </Navbar>
