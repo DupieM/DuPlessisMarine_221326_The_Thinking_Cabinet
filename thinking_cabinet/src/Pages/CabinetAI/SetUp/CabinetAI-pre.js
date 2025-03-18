@@ -65,7 +65,7 @@ function CabinetAIPre() {
       
           setLoading(true);
           try {
-              const apiKey = ""; 
+              const apiKey = "API_key"; 
       
               const prompt = `Write a short ${genre} story titled "${storyName}".`;
       
