@@ -6,7 +6,7 @@ import { getAuth } from "firebase/auth";
 const API_URL = "https://api.openai.com/v1/chat/completions"; // Best practice to set URL as variable.
 
 function CabinetAIPre() {
-    const [userId, setUserId] = useState(null);
+    const [userId, setUserId] = useState("");
     const [collectionName, setCollectionName] = useState("");
     const [storyName, setStoryName] = useState("");
     const [genre, setGenre] = useState("");
@@ -65,9 +65,19 @@ function CabinetAIPre() {
       
           setLoading(true);
           try {
-              const apiKey = "API_key"; 
+              const apiKey = "api_key"; 
+
+              // Build the prompt with image names
+              let imageDescriptions = "";
+              if (images.length > 0) {
+                  imageDescriptions = "The story should incorporate these images and their names: ";
+                  images.forEach((img, index) => {
+                      imageDescriptions += `${img.name}${index === images.length - 1 ? "" : ", "}`;
+                  });
+                  imageDescriptions += ". "; // Add a period for better flow
+              }
       
-              const prompt = `Write a short ${genre} story titled "${storyName}".`;
+              const prompt = `${imageDescriptions}Write a short ${genre} story titled "${storyName}".`;
       
               const response = await axios.post(
                   API_URL, // Use the API_URL variable
