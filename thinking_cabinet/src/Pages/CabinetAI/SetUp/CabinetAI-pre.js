@@ -3,6 +3,8 @@ import axios from "axios";
 import { saveImageToFirestore, saveStoryToFirestore } from "../../../services/DbService";
 import { getAuth } from "firebase/auth";
 
+const API_URL = "https://api.openai.com/v1/chat/completions"; // Best practice to set URL as variable.
+
 function CabinetAIPre() {
     const [userId, setUserId] = useState(null);
     const [collectionName, setCollectionName] = useState("");
@@ -53,29 +55,45 @@ function CabinetAIPre() {
       };
 
       // Call OpenAI to Generate Story
-  const generateStory = async () => {
-    if (!storyName.trim() || !genre.trim()) {
-      alert("Please enter a story name and select a genre.");
-      return;
-    }
+      
 
-    setLoading(true);
-    try {
-      const response = await axios.post("https://api.openai.com/v1/completions", {
-        model: "gpt-4",
-        prompt: `Write a short ${genre} story titled "${storyName}".`,
-        max_tokens: 300,
-      }, {
-        headers: { "Authorization": `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}` },
-      });
-
-      setNarrative(response.data.choices[0].text.trim());
-    } catch (error) {
-      console.error("Error generating story:", error);
-      alert("Failed to generate story.");
-    }
-    setLoading(false);
-    };
+      const generateStory = async () => {
+          if (!storyName.trim() || !genre.trim()) {
+              alert("Please enter a story name and select a genre.");
+              return;
+          }
+      
+          setLoading(true);
+          try {
+              const apiKey = ""; 
+      
+              const prompt = `Write a short ${genre} story titled "${storyName}".`;
+      
+              const response = await axios.post(
+                  API_URL, // Use the API_URL variable
+                  {
+                      model: "gpt-3.5-turbo", // Use a model you have access to.
+                      messages: [
+                          { role: "system", content: "You are a story writing assistant." }, // Add a system message.
+                          { role: "user", content: prompt },
+                      ],
+                      temperature: 0.7, // Add temperature to control randomness.
+                  },
+                  {
+                      headers: {
+                          "Content-Type": "application/json", // Explicitly set content type.
+                          Authorization: `Bearer ${apiKey}`,
+                      },
+                  }
+              );
+      
+              setNarrative(response.data.choices[0].message.content.trim());
+          } catch (error) {
+              console.error("Error generating story:", error.response ? error.response.data : error);
+              alert("Failed to generate story.");
+          }
+          setLoading(false);
+      };
 
     // Save Story to Firestore
   const handleSaveStory = async () => {
