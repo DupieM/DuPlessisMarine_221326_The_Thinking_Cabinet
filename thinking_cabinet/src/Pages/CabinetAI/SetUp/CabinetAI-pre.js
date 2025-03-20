@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { saveImageToFirestore, saveStoryToFirestore } from "../../../services/DbService";
-import { getAuth } from "firebase/auth";
+import { auth } from "../../../firebase";
 
 const API_URL = "https://api.openai.com/v1/chat/completions"; // Best practice to set URL as variable.
 
@@ -16,14 +16,28 @@ function CabinetAIPre() {
     const [images, setImages] = useState([]);
 
     useEffect(() => {
-        const auth = getAuth();
-        const user = auth.currentUser;
-        if (user) {
-          setUserId(user.uid);
-        } else {
-          console.log("No user logged in.");
-        }
-      }, []);
+      const unsubscribe = auth.onAuthStateChanged((currentUser) => {
+        setUserId(currentUser.uid);
+        console.log(currentUser)
+      });
+  
+      return () => unsubscribe(); // Cleanup subscription
+    }, []);
+
+    // useEffect(() => {
+    //     getcurrentUser()
+    // }, []);
+
+    // const getcurrentUser = async () => {
+    //   const user = await auth.currentUser;
+    //     console.log(user)
+    //     if (user) {
+    //       setUserId(user.uid);
+          
+    //     } else {
+    //       console.log("No user logged in.");
+    //     }
+    // }
 
     // Image upload
     const handleUpload = async (e) => {
@@ -65,7 +79,9 @@ function CabinetAIPre() {
       
           setLoading(true);
           try {
-              const apiKey = "api_key"; 
+              const apiKey = process.env.REACT_APP_OPENAI_API_KEY; 
+
+              console.log(process.env.REACT_APP_OPENAI_API_KEY)
 
               // Build the prompt with image names
               let imageDescriptions = "";
@@ -129,6 +145,8 @@ function CabinetAIPre() {
           CabinetAI
         </h2>
   
+        <h4>Please enter Collection Name below and upload images</h4>
+        <br/>
         {/* Collection Name Input */}
         <input
           type="text"
@@ -136,6 +154,8 @@ function CabinetAIPre() {
           value={collectionName}
           onChange={(e) => setCollectionName(e.target.value)}
         />
+
+      <br/>
   
         {/* Upload Image */}
         <input type="file" onChange={handleUpload} />
@@ -187,6 +207,12 @@ function CabinetAIPre() {
           ))}
         </div>
   
+        <br/>
+
+        <h3>Please enter a story name and then choose genre of story, then you can gebnerate your story.</h3>
+
+        <br/>
+
         {/* Story Name Input */}
         <input
           type="text"
