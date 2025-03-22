@@ -1,6 +1,6 @@
 import React from "react";
 
-function WunderchatPre() {
+function Wunderchat() {
     return (
         <div className="App2">
 
@@ -14,4 +14,4 @@ function WunderchatPre() {
     )
 }
 
-export default WunderchatPre;
+export default Wunderchat;

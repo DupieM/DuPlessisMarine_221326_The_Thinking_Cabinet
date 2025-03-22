@@ -4,12 +4,10 @@ import Authentications from './Pages/Authentication/Authentication';
 import Home from './Pages/Home/Home';
 import Profile from './Pages/Profile/Profile';
 import CabinetAIPre from './Pages/CabinetAI/SetUp/CabinetAI-pre';
-import CabinetAIPost from './Pages/CabinetAI/Reslut/CabinetAI-post';
-import WunderchatPre from './Pages/Wunderchat/Setup/Wunderchat-pre';
-import WunderchatPost from './Pages/Wunderchat/Result/Wunderchat-post';
 import BasicNavbar from './componements/navbar'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Outlet } from 'react-router';
+import Wunderchat from './Pages/Wunderchat/Wunderchat';
 
 
 function App() {
@@ -17,6 +15,7 @@ function App() {
     <div className="App">
       <Routes>
         <Route path="/" element={<Authentications />} />
+        <Route path="/wunderchat" element={<Wunderchat />} />
         <Route
           element={
             <>
