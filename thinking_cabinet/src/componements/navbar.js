@@ -3,6 +3,7 @@ import { Container, Nav, Navbar, Button } from "react-bootstrap";
 import { signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
+import './navbar.css';
 
 function BasicNavbar() {
     const [user, setUser] = useState(null);
@@ -27,11 +28,11 @@ function BasicNavbar() {
       };
 
     return (
-      <Navbar variant="dark" style={{backgroundColor: 'darkblue', padding: '0'}}>
+      <Navbar variant="dark" style={{backgroundColor: 'darkblue', padding: '10px'}}>
             <Container style={{textAlign: 'left'}}>
                 <Navbar.Brand href="/home">The Thinking Cabinet</Navbar.Brand>
-                <Nav.Link href="/cabinetAI-pre" style={{fontSize: '17pt', color: 'white', fontWeight: 'bold', marginRight: '20px'}}>CabinetAI</Nav.Link>
                 <Nav.Link href="/profile" style={{fontSize: '17pt', color: 'white', fontWeight: 'bold'}}>Profile</Nav.Link>
+                <Nav.Link href="/cabinetAI-pre" style={{fontSize: '17pt', color: 'white', fontWeight: 'bold', marginRight: '20px'}}>CabinetAI</Nav.Link>
                 {user ? (
                     <Button variant="danger" onClick={handleLogout}>
                         Logout
