@@ -4,6 +4,8 @@ import { signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
 import './navbar.css';
+import icon from './avatar.png';
+import icon2 from './logout.png';
 
 function BasicNavbar() {
     const [user, setUser] = useState(null);
@@ -28,18 +30,17 @@ function BasicNavbar() {
       };
 
     return (
-      <Navbar variant="dark" style={{backgroundColor: 'darkblue', padding: '10px'}}>
+      <Navbar variant="dark" className="navbar">
             <Container style={{textAlign: 'left'}}>
-                <Navbar.Brand href="/home">The Thinking Cabinet</Navbar.Brand>
-                <Nav.Link href="/profile" style={{fontSize: '17pt', color: 'white', fontWeight: 'bold'}}>Profile</Nav.Link>
-                <Nav.Link href="/cabinetAI-pre" style={{fontSize: '17pt', color: 'white', fontWeight: 'bold', marginRight: '20px'}}>CabinetAI</Nav.Link>
+                <Navbar.Brand href="/home" style={{marginRight: "6px"}}>The Thinking Cabinet</Navbar.Brand>
+                <Nav.Link href="/cabinetAI-pre" style={{fontSize: '18pt', color: '#1B1D13', fontWeight: '700'}}>CabinetAI</Nav.Link>
+                <Navbar.Brand href="/profile"  style={{fontSize: '18pt', color: '#1B1D13', fontWeight: '700', marginLeft: '-750px'}}><img src={icon} style={{width: '13%'}}/></Navbar.Brand>
                 {user ? (
-                    <Button variant="danger" onClick={handleLogout}>
-                        Logout
-                    </Button>
-                    ) : (
-                    <div></div>
+                  <Navbar.Brand onClick={handleLogout} style={{marginRight: '-150px', marginLeft: '-985px'}}><img src={icon2} style={{width: '14%'}}/></Navbar.Brand>
+                  ) : (
+                  <div></div>
                 )}
+                
             </Container>
         </Navbar>
     );
