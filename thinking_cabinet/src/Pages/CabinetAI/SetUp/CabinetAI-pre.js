@@ -14,6 +14,8 @@ function CabinetAIPre() {
     const [collectionId, setCollectionId] = useState("");
     const [loading, setLoading] = useState(false);
     const [images, setImages] = useState([]);
+    const [chatMessages, setChatMessages] = useState([]);
+    const [userMessage, setUserMessage] = useState("");
 
     useEffect(() => {
       const unsubscribe = auth.onAuthStateChanged((currentUser) => {
@@ -69,57 +71,57 @@ function CabinetAIPre() {
       };
 
       // Call OpenAI to Generate Story
-      
-
       const generateStory = async () => {
-          if (!storyName.trim() || !genre.trim()) {
-              alert("Please enter a story name and select a genre.");
-              return;
-          }
-      
-          setLoading(true);
-          try {
-              const apiKey = process.env.REACT_APP_OPENAI_API_KEY; 
-
-              console.log(process.env.REACT_APP_OPENAI_API_KEY)
-
-              // Build the prompt with image names
-              let imageDescriptions = "";
-              if (images.length > 0) {
-                  imageDescriptions = "The story should incorporate these images and their names: ";
-                  images.forEach((img, index) => {
-                      imageDescriptions += `${img.name}${index === images.length - 1 ? "" : ", "}`;
-                  });
-                  imageDescriptions += ". "; // Add a period for better flow
-              }
-      
-              const prompt = `${imageDescriptions}Write a short ${genre} story titled "${storyName}".`;
-      
-              const response = await axios.post(
-                  API_URL, // Use the API_URL variable
-                  {
-                      model: "gpt-3.5-turbo", // Use a model you have access to.
-                      messages: [
-                          { role: "system", content: "You are a story writing assistant." }, // Add a system message.
-                          { role: "user", content: prompt },
-                      ],
-                      temperature: 0.7, // Add temperature to control randomness.
-                  },
-                  {
-                      headers: {
-                          "Content-Type": "application/json", // Explicitly set content type.
-                          Authorization: `Bearer ${apiKey}`,
-                      },
-                  }
-              );
-      
-              setNarrative(response.data.choices[0].message.content.trim());
-          } catch (error) {
-              console.error("Error generating story:", error.response ? error.response.data : error);
-              alert("Failed to generate story.");
-          }
-          setLoading(false);
-      };
+        if (!storyName.trim() || !genre.trim()) {
+            alert("Please enter a story name and select a genre.");
+            return;
+        }
+    
+        setLoading(true);
+        try {
+            const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
+    
+            let imageDescriptions = "";
+            if (images.length > 0) {
+                imageDescriptions = "The story should incorporate the following images: ";
+                images.forEach((img, index) => {
+                    imageDescriptions += `"${img.name}"${index === images.length - 1 ? "" : ", "}`;
+                });
+                imageDescriptions += ". ";
+            }
+    
+            let previousStory = narrative.trim()
+                ? `Here is a previous version of the story: "${narrative}". Improve it by making it more engaging and descriptive while aligning it with the uploaded images.`
+                : "Write a fresh story based on the given theme and images.";
+    
+            const prompt = `${imageDescriptions} ${previousStory} The story should be a ${genre} story titled "${storyName}". Ensure that the characters and settings match the uploaded images.`;
+    
+            const response = await axios.post(
+                API_URL,
+                {
+                    model: "gpt-3.5-turbo",
+                    messages: [
+                        { role: "system", content: "You are an advanced AI that generates engaging stories based on user-provided images and text." },
+                        { role: "user", content: prompt },
+                    ],
+                    temperature: 0.7,
+                },
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${apiKey}`,
+                    },
+                }
+            );
+    
+            setNarrative(response.data.choices[0].message.content.trim());
+        } catch (error) {
+            console.error("Error generating story:", error.response ? error.response.data : error);
+            alert("Failed to generate story.");
+        }
+        setLoading(false);
+    };
+    
 
     // Save Story to Firestore
   const handleSaveStory = async () => {
@@ -138,6 +140,42 @@ function CabinetAIPre() {
         updatedImages[index].name = newName;
         setImages(updatedImages);
     };
+
+    // AI function to chat
+    const handleChat = async () => {
+      if (!userMessage.trim()) return;
+  
+      setChatMessages([...chatMessages, { role: "user", content: userMessage }]); // Add user message to chat
+  
+      try {
+          const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
+  
+          const response = await axios.post(
+              API_URL,
+              {
+                  model: "gpt-3.5-turbo",
+                  messages: [
+                      { role: "system", content: "You are an AI assistant knowledgeable about storytelling and image analysis." },
+                      ...chatMessages, // Include previous chat history
+                      { role: "user", content: userMessage }
+                  ],
+                  temperature: 0.7,
+              },
+              {
+                  headers: {
+                      "Content-Type": "application/json",
+                      Authorization: `Bearer ${apiKey}`,
+                  },
+              }
+          );
+  
+          const aiResponse = response.data.choices[0].message.content.trim();
+          setChatMessages([...chatMessages, { role: "user", content: userMessage }, { role: "assistant", content: aiResponse }]); // Add AI response to chat
+          setUserMessage(""); // Clear input field
+      } catch (error) {
+          console.error("Error in chat:", error.response ? error.response.data : error);
+      }
+  };
 
     return (
         <div className="App2">
@@ -209,7 +247,7 @@ function CabinetAIPre() {
   
         <br/>
 
-        <h3>Please enter a story name and then choose genre of story, then you can gebnerate your story.</h3>
+        <h4>Please enter a story name and then choose genre of story, then you can gebnerate your story.</h4>
 
         <br/>
 
@@ -247,6 +285,44 @@ function CabinetAIPre() {
         <button onClick={handleSaveStory} disabled={!collectionId}>
           Save Story
         </button>
+
+        <br/>
+        <br/>
+
+        <h4>Please start chatting with AI below about objects and/or story.</h4>
+
+        <br/>
+
+        {/* Chat Function here */}
+        <div style={{ marginTop: "20px", padding: "10px", background: "#f5f5f5", borderRadius: "8px" }}>
+          <h3>Chat with AI</h3>
+
+          <div style={{ maxHeight: "300px", overflowY: "auto", padding: "10px", border: "1px solid #ddd", background: "#fff" }}>
+              {chatMessages.map((msg, index) => (
+                  <div key={index} style={{ 
+                      textAlign: msg.role === "user" ? "right" : "left", 
+                      margin: "5px 0", 
+                      padding: "8px", 
+                      borderRadius: "6px", 
+                      background: msg.role === "user" ? "#d1e7ff" : "#e8e8e8" 
+                  }}>
+                      <strong>{msg.role === "user" ? "You" : "AI"}:</strong> {msg.content}
+                  </div>
+              ))}
+          </div>
+
+          <input 
+              type="text" 
+              value={userMessage} 
+              onChange={(e) => setUserMessage(e.target.value)} 
+              placeholder="Type your message..." 
+              style={{ width: "80%", padding: "10px", margin: "10px 0", borderRadius: "5px" }} 
+          />
+
+          <button onClick={handleChat} style={{ padding: "10px", cursor: "pointer" }}>Send</button>
+      </div>
+
+
       </div>
     )
 }
