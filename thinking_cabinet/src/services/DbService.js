@@ -16,7 +16,6 @@ export const saveImageToFirestore = async (userId, collectionName, imageName, im
         await addDoc(collection(collectionDoc, "images"), {
             name: imageName,
             url: imageUrl,
-            timestamp: new Date()
         });
 
         return collectionDoc.id; // Return collection ID to link later
