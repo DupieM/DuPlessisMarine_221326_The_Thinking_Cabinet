@@ -21,9 +21,9 @@
   <p align="center">
     ??? <br>
    <br />
-    <a href="https://github.com/DupieM/duplessismarine_221326_carbontrack/issues">Report Bug</a>
+    <a href="https://github.com/DupieM/DuPlessisMarine_221326_The_Thinking_Cabinet/issues">Report Bug</a>
     ·
-    <a href="https://github.com/DupieM/duplessismarine_221326_carbontrack/issues">Request Feature</a>
+    <a href="https://github.com/DupieM/DuPlessisMarine_221326_The_Thinking_Cabinet/issues">Request Feature</a>
 </p>
 
 <!-- TABLE OF CONTENTS -->
