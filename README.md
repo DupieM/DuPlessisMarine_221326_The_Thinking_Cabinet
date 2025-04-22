@@ -175,16 +175,11 @@ The `Development Process` is the technical implementations and functionality don
 ### Implementation Process
 <!-- stipulate all of the functionality you included in the project -->
 
-* `Expo` was used to create a native Android app
-* `OpenAI` was used to get insights on their carbon footprint data
-* `Google Custom Search` was used to get reducing tips in general and for their total emission data
-* `QuickChart` was used to display all the data on charts
+* ??
 
 #### Highlights
 <!-- stipulated the highlight you experienced with the project -->
-* To be able to implement two different types of AI 
-* To be able to activate the forgot password to send a link to users email to reset it
-* To be able to work natively on my computer and seeing the results on the mobile application
+* ??
 
 #### Challenges
 <!-- stipulated the challenges you faced with the project and why you think you faced it or how you think you'll solve it (if not solved) -->
