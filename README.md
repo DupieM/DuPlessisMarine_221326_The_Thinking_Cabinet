@@ -183,10 +183,7 @@ The `Development Process` is the technical implementations and functionality don
 
 #### Challenges
 <!-- stipulated the challenges you faced with the project and why you think you faced it or how you think you'll solve it (if not solved) -->
-* Trying to find the correct calculation to be able to calculate a Carbon Footprint for an individual 
-* When using the calculation it was challenging to understand and use the correct units of measure
-* Implementing the two types of AI for the insights and custom search, especially understand how to use these technologies
-* Creating another subcollection in an already existing subcollection in Firebase
+* ??
 
 ### Reviews & Testing
 <!-- stipulate how you've conducted testing in the form of peer reviews, feedback and also functionality testing, like unit tests (if applicable) -->
