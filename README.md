@@ -13,7 +13,7 @@
 <p align="center">
 
   <a href="https://github.com/username/projectname">
-    <img src="readme_images/LOGO.png" alt="Logo" width="240" height="140">
+    <img src="readme_images/LOGO.png" alt="Logo" width="240" height="130">
   </a>
   
   <h3 align="center">The Thinking Cabinet</h3>
