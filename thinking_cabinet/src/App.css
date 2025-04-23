@@ -1,10 +1,12 @@
 .App {
   text-align: center;
+  overflow-x: hidden;
 }
 
 .App2 {
   text-align: center;
-  background-color: #7A94A1;
+  background-color: #11120D;
+  padding-top: 5px;
 }
 
 .App-logo {
