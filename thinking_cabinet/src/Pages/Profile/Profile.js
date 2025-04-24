@@ -7,9 +7,11 @@ function Profile() {
 
             <br/>
 
-            <h2 style={{marginLeft: '70px', fontWeight: 'bold', color: 'black', fontSize: '30pt'}}>Profile</h2>
+            <h2 style={{marginLeft: '70px', fontWeight: 'bold', color: '#ebe4d1', fontSize: '40pt'}}>Update Profile</h2>
 
             <br/>
+
+            <h2 style={{marginLeft: '70px', fontWeight: 'bold', color: '#ebe4d1', fontSize: '40pt'}}>Cabinet</h2>
 
         </div>
     )
