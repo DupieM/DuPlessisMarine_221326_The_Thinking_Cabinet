@@ -46,10 +46,34 @@
     font-size: 50pt
 }
 
+.collection {
+    height: 300px;
+    margin-top: 20px
+}
 
+.CLN {
+    color: #D8D0BD;
+    margin-top: 20px
+}
+
+.User {
+    color: #D8D0BD;
+    margin-bottom: 40px
+}
+
+.quate {
+    height: 110px;
+    opacity: 80%
+}
+
+.qoute_text {
+    color: #D8D0BD;
+    margin-bottom: 10px;
+    font-size: 40pt
+}
 
 .footer {
-    margin-top: 30px;
+    margin-top: 50px;
     padding: 15px;
     background-color: #94A98A;
 }

@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { getAuth } from "firebase/auth";
 import './Home.css'
 import image1 from "../../assets/landing_image.png"
+import quate1 from "../../assets/Quoate_1.png"
+import quate2 from "../../assets/Quoate_2.png"
+import collection from "../../assets/collections.png"
 import { Link } from 'react-router-dom';
 
 function Home() {
@@ -45,10 +48,26 @@ function Home() {
             
             <br/>
 
-            <p style={{color: '#D8D0BD', marginBottom: '10px', fontSize: '40pt'}}>
+            <div>
+              <div>
+                <img src={collection} className="collection"/>
+                <h1 className="CLN">Collection Name</h1>
+                <h3 className="User">User</h3>
+              </div>
+            </div>
+
+            
+
+            <br/>
+
+            <img src={quate1} className="quate"/>
+
+            <p className="qoute_text">
               “This is a thought provoking platform that challenges <br/>
               my assumptions and my perspective.”
             </p>
+
+            <img src={quate2} className="quate"/>
 
             <footer>
                 <div className="footer">
