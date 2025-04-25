@@ -168,7 +168,7 @@ const handleImageClick = (image) => {
   };
 
   return (
-    <div className="App2" style={{ padding: "20px" }}>
+    <div className="App2">
       <h2>CabinetAI</h2>
 
       <input
@@ -267,6 +267,13 @@ const handleImageClick = (image) => {
           <button onClick={handleChat}>Send</button>
         </div>
       </div>
+
+      <footer>
+        <div className="footer">
+          <h6 className="footer_text">Copyright © 2025 The Thinking Cabinet. All rights reserved.</h6>
+        </div>
+      </footer>
+
     </div>
   );
 }
