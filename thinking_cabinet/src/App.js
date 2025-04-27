@@ -8,28 +8,32 @@ import BasicNavbar from './componements/navbar'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Outlet } from 'react-router';
 import Wunderchat from './Pages/Wunderchat/Wunderchat';
+import { SharedDataProvider } from './componements/SharedDataProvider';
+import CabinetAIPost from './Pages/CabinetAI/Reslut/CabinetAI-post';
 
 
 function App() {
   return (
     <div className="App">
-      <Routes>
-        <Route path="/" element={<Authentications />} />
-        <Route path="/wunderchat" element={<Wunderchat />} />
-        <Route
-          element={
-            <>
-              <BasicNavbar />
-              <Outlet />
-            </>
-          }
-        >
-            <Route path='/home' element= { <Home />} />
-            <Route path='/cabinetAI-pre' element={<CabinetAIPre />} />
-            <Route path='/profile' element={<Profile  />} />
-        </Route>
-        
-      </Routes>
+      <SharedDataProvider>
+        <Routes>
+          <Route path="/" element={<Authentications />} />
+          <Route path="/wunderchat" element={<Wunderchat />} />
+          <Route
+            element={
+              <>
+                <BasicNavbar />
+                <Outlet />
+              </>
+            }
+          >
+              <Route path='/home' element= { <Home />} />
+              <Route path='/cabinetAI-pre' element={<CabinetAIPre />} />
+              <Route path='/cabinetAI-post' element={<CabinetAIPost />} />
+              <Route path='/profile' element={<Profile  />} />
+          </Route>
+        </Routes>
+      </SharedDataProvider>
     </div>
   );
 }

@@ -1,18 +1,129 @@
-import React from "react";
+import React, { useState } from "react";
+import axios from "axios";
+import { saveStoryToFirestore } from "../../../services/DbService";
+import { useSharedData } from "../../../componements/SharedDataProvider";
+
+const API_URL = "https://api.openai.com/v1/chat/completions";
 
 function CabinetAIPost() {
-    <div className="App2">
-        <h2 style={{ marginLeft: "70px", fontWeight: "bold", color: "black", fontSize: "30pt" }}>
-          CabinetAI
-        </h2>
+  const { sharedData } = useSharedData();
+  const [narrative, setNarrative] = useState("");
+  const [chatMessages, setChatMessages] = useState([]);
+  const [userMessage, setUserMessage] = useState("");
+  const [questions] = useState([
+    "What inspired the main character?",
+    "Describe the setting in more detail.",
+    "How do the objects influence the story?",
+  ]);
 
-        {/* Generated Story appears here */}
+  const generateStory = async () => {
+    const { storyName, genre, images } = sharedData;
+    const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
 
-        {/* Chat Function here */}
+    let imageDescriptions = "The story includes these images: ";
+    images.forEach((img, i) => {
+      imageDescriptions += `${img.name}${i === images.length - 1 ? "" : ", "}`;
+    });
 
-        {/* Dropdown Qusetions */}
+    const prompt = `${imageDescriptions}. Write a ${genre} story titled "${storyName}".`;
 
+    const response = await axios.post(
+      API_URL,
+      {
+        model: "gpt-3.5-turbo",
+        messages: [
+          { role: "system", content: "You are an AI storyteller." },
+          { role: "user", content: prompt },
+        ],
+        temperature: 0.7,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${apiKey}`,
+        },
+      }
+    );
+
+    setNarrative(response.data.choices[0].message.content.trim());
+  };
+
+  const handleSaveStory = async () => {
+    const { userId, collectionId, storyName, genre } = sharedData;
+    if (!collectionId) {
+      alert("Collection missing.");
+      return;
+    }
+    await saveStoryToFirestore(userId, collectionId, storyName, genre, narrative);
+    alert("Story saved!");
+  };
+
+  const handleChat = async () => {
+    if (!userMessage.trim()) return;
+    const newMessages = [...chatMessages, { role: "user", content: userMessage }];
+    const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
+
+    const response = await axios.post(
+      API_URL,
+      {
+        model: "gpt-3.5-turbo",
+        messages: [{ role: "system", content: "You are an AI storyteller." }, ...newMessages],
+        temperature: 0.7,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${apiKey}`,
+        },
+      }
+    );
+
+    const aiResponse = response.data.choices[0].message.content.trim();
+    setChatMessages([...newMessages, { role: "assistant", content: aiResponse }]);
+    setUserMessage("");
+  };
+
+  return (
+    <div className="page-container">
+      <h2>Generated Story</h2>
+      <button onClick={generateStory}>Generate Story</button>
+      <p>{narrative}</p>
+
+      <button onClick={handleSaveStory}>Save Story</button>
+
+      <h3>Chat with AI</h3>
+      <select
+        onChange={(e) => {
+          if (e.target.value) setUserMessage(e.target.value);
+        }}
+      >
+        <option value="">Questions to ask</option>
+        {questions.map((q, idx) => (
+          <option key={idx} value={q}>
+            {q}
+          </option>
+        ))}
+      </select>
+
+      <input
+        type="text"
+        placeholder="Type your message..."
+        value={userMessage}
+        onChange={(e) => setUserMessage(e.target.value)}
+      />
+      <button onClick={handleChat}>Send</button>
+
+      <div className="chat-container">
+        {chatMessages.map((msg, idx) => (
+          <div key={idx} style={{ textAlign: msg.role === "user" ? "right" : "left" }}>
+            <p style={{ background: msg.role === "user" ? "#cce5ff" : "#d4edda", padding: "10px", borderRadius: "10px", display: "inline-block" }}>
+              {msg.content}
+            </p>
+          </div>
+        ))}
+      </div>
     </div>
+  );
 }
 
 export default CabinetAIPost;
