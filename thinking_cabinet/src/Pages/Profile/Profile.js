@@ -2,9 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import "./Profile.css";
 import { auth, storage, db } from '../../firebase';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { doc, updateDoc, getDoc } from 'firebase/firestore';
+import { doc, updateDoc, getDoc, collection, getDocs } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
-import { collection, getDocs } from 'firebase/firestore';
 
 function Profile() {
   const [image, setImage] = useState(null);
@@ -22,10 +21,10 @@ function Profile() {
     const unsubscribe = onAuthStateChanged(auth, async (authUser) => {
       if (authUser) {
         setUser(authUser);
-  
+
         const userDocRef = doc(db, 'users', authUser.uid);
         const userDocSnap = await getDoc(userDocRef);
-  
+
         if (userDocSnap.exists()) {
           const data = userDocSnap.data();
           setUserData({
@@ -45,7 +44,7 @@ function Profile() {
         setUserData({ displayName: '', email: '', password: '' });
       }
     });
-  
+
     return () => unsubscribe();
   }, []);
 
@@ -65,20 +64,20 @@ function Profile() {
         console.error('Error fetching collections:', error);
       }
     };
-  
+
     fetchUserCollections();
   }, [user]);
-  
+
   const handleCollectionChange = async (e) => {
     const collectionId = e.target.value;
     setSelectedCollectionId(collectionId);
     setImages([]);
-  
+
     const selectedCollection = collections.find(c => c.id === collectionId);
     setSelectedNarrative(selectedCollection?.narrative || '');
-  
+
     if (!user || !collectionId) return;
-  
+
     try {
       const imagesRef = collection(db, 'users', user.uid, 'collections', collectionId, 'images');
       const snapshot = await getDocs(imagesRef);
@@ -133,7 +132,6 @@ function Profile() {
 
   return (
     <div className="App2">
-
       <h2 style={{ marginLeft: '70px', fontWeight: 'bold', color: '#ebe4d1', fontSize: '40pt' }}>Update Profile</h2>
 
       <div className="profile-picture-container">
@@ -167,7 +165,7 @@ function Profile() {
           <strong>Password:</strong> 
           {showPassword 
             ? ` ${userData.password}` 
-            : ` ${'•'.repeat(userData.password.length || 0)}`
+            : ` ${'•'.repeat(userData.password.length || 0)}` 
           }
           <button 
             onClick={() => setShowPassword(!showPassword)} 

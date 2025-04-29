@@ -42,18 +42,30 @@ export const saveImageToFirestore = async (userId, collectionId, imageName, imag
   };
   
   // Save the story under the same collection
-  export const saveStoryToFirestore = async (userId, collectionId, storyName, genre, narrative) => {
+  export const saveStoryToFirestore = async (
+    userId,
+    collectionId,
+    storyName,
+    genre,
+    narrative
+  ) => {
     try {
-      const storyDocRef = doc(db, "users", userId, "collections", collectionId, "story");
-      await setDoc(storyDocRef, {
+      // Save story directly under: users/{userId}/collections/{collectionId}/stories/{storyName}
+      const storyRef = doc(
+        db,
+        `users/${userId}/collections/${collectionId}/stories/${storyName}`
+      );
+  
+      await setDoc(storyRef, {
         title: storyName,
         genre,
-        content: narrative,
-        timestamp: serverTimestamp(),
+        narrative,
+        createdAt: serverTimestamp(),
       });
+  
+      console.log('Story successfully saved to Firestore.');
     } catch (error) {
-      console.error("Error saving story:", error);
-      throw error;
+      console.error('Error saving story: ', error);
     }
   };
 

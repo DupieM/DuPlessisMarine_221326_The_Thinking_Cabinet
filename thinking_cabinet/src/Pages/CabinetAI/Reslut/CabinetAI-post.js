@@ -17,6 +17,21 @@ function CabinetAIPost() {
     "How do the objects influence the story?",
   ]);
 
+  const extractCollectionId = (url) => {
+    if (!url.startsWith("http")) return url; // Already a name like "nature"
+    try {
+      const decoded = decodeURIComponent(url);
+      const segments = decoded.split("/");
+      const collectionsIndex = segments.indexOf("collections");
+      if (collectionsIndex !== -1 && segments[collectionsIndex + 1]) {
+        return segments[collectionsIndex + 1]; // e.g. "nature"
+      }
+      return "defaultCollection"; // fallback
+    } catch (e) {
+      return "defaultCollection";
+    }
+  };
+
   const generateStory = async () => {
     const { storyName, genre, images } = sharedData;
     const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
@@ -51,13 +66,19 @@ function CabinetAIPost() {
   };
 
   const handleSaveStory = async () => {
-    const { userId, collectionId, storyName, genre } = sharedData;
-    if (!collectionId) {
-      alert("Collection missing.");
+    const { userId, collectionId, storyName, genre, images } = sharedData;
+  
+    if (!collectionId || !images || images.length === 0) {
+      alert("Collection or images missing.");
       return;
     }
-
-    await saveStoryToFirestore(userId, collectionId, storyName, genre, narrative);
+  
+    const cleanCollectionId = extractCollectionId(collectionId); // Clean collection ID
+  
+    // Assuming you want to save the story for the first image
+    const imageId = images[0].id; // You may need to adjust this based on how images are structured
+  
+    await saveStoryToFirestore(userId, cleanCollectionId, imageId, storyName, genre, narrative);
     alert("Story saved!");
   };
 
