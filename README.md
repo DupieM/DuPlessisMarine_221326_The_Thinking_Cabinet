@@ -13,13 +13,13 @@
 <p align="center">
 
   <a href="https://github.com/username/projectname">
-    <img src="readme_images/LOGO.png" alt="Logo" width="240" height="130">
+    <img src="readme_images/LOGO.png" alt="Logo" width="240" height="120">
   </a>
   
   <h3 align="center">The Thinking Cabinet</h3>
 
   <p align="center">
-    ??? <br>
+    Your AI-powered Wunderkammer of curiosity and reflection. <br>
    <br />
     <a href="https://github.com/DupieM/DuPlessisMarine_221326_The_Thinking_Cabinet/issues">Report Bug</a>
     ·
