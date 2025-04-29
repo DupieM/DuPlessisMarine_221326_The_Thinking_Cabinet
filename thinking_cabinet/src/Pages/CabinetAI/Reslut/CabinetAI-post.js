@@ -10,6 +10,7 @@ function CabinetAIPost() {
   const [narrative, setNarrative] = useState("");
   const [chatMessages, setChatMessages] = useState([]);
   const [userMessage, setUserMessage] = useState("");
+
   const [questions] = useState([
     "What inspired the main character?",
     "Describe the setting in more detail.",
@@ -45,7 +46,8 @@ function CabinetAIPost() {
       }
     );
 
-    setNarrative(response.data.choices[0].message.content.trim());
+    const generatedStory = response.data.choices[0].message.content.trim();
+    setNarrative(generatedStory);
   };
 
   const handleSaveStory = async () => {
@@ -54,12 +56,14 @@ function CabinetAIPost() {
       alert("Collection missing.");
       return;
     }
+
     await saveStoryToFirestore(userId, collectionId, storyName, genre, narrative);
     alert("Story saved!");
   };
 
   const handleChat = async () => {
     if (!userMessage.trim()) return;
+
     const newMessages = [...chatMessages, { role: "user", content: userMessage }];
     const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
 
@@ -67,7 +71,11 @@ function CabinetAIPost() {
       API_URL,
       {
         model: "gpt-3.5-turbo",
-        messages: [{ role: "system", content: "You are an AI storyteller." }, ...newMessages],
+        messages: [
+          { role: "system", content: "You are an AI storyteller." },
+          { role: "user", content: `Here's the full story: ${narrative}` },
+          ...newMessages,
+        ],
         temperature: 0.7,
       },
       {
@@ -116,7 +124,14 @@ function CabinetAIPost() {
       <div className="chat-container">
         {chatMessages.map((msg, idx) => (
           <div key={idx} style={{ textAlign: msg.role === "user" ? "right" : "left" }}>
-            <p style={{ background: msg.role === "user" ? "#cce5ff" : "#d4edda", padding: "10px", borderRadius: "10px", display: "inline-block" }}>
+            <p
+              style={{
+                background: msg.role === "user" ? "#cce5ff" : "#d4edda",
+                padding: "10px",
+                borderRadius: "10px",
+                display: "inline-block",
+              }}
+            >
               {msg.content}
             </p>
           </div>

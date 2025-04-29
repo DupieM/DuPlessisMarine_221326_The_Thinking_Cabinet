@@ -1,41 +1,52 @@
 .profile-picture-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-left: 70px; /* Keep the margin for alignment */
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 70px; /* Keep the margin for alignment */
+}
   
-  .profile-picture {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    background-size: cover;
-    background-position: center;
-    margin-bottom: 10px; /* Add some space between the image and the buttons */
-    border: 2px solid #ebe4d1; /* Optional border */
-  }
+.profile-picture {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  margin-bottom: 10px; /* Add some space between the image and the buttons */
+  border: 2px solid #ebe4d1; /* Optional border */
+}
   
-  .upload-button,
-  .save-button {
-    padding: 10px 20px;
-    background-color: #a0855b; /* Example button color */
-    color: #ebe4d1;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-    margin-top: 5px; /* Add some space between buttons */
-  }
+.upload-button,
+.save-button {
+  padding: 10px 20px;
+  background-color: #a0855b; /* Example button color */
+  color: #ebe4d1;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+  margin-top: 5px; /* Add some space between buttons */
+}
   
-  .upload-button:hover,
-  .save-button:hover {
-    background-color: #8c7045;
-  }
+.upload-button:hover,
+.save-button:hover {
+  background-color: #8c7045;
+}
   
-  .upload-button:disabled,
-  .save-button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-  }
-  
+.upload-button:disabled,
+.save-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.Heading_one {
+  font-weight: bold;
+  color: #ebe4d1;
+  font-size: 40pt
+}
+
+.Heading_two {
+  font-weight: bold;
+  color: #ebe4d1;
+  font-size: 40pt
+}

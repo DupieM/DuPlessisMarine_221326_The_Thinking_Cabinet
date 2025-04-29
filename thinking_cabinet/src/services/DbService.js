@@ -1,46 +1,69 @@
-import { db } from "../firebase";
-import { collection, doc, setDoc, addDoc } from "firebase/firestore";
+import { db, storage } from "../firebase";
+import { ref, uploadString, getDownloadURL } from "firebase/storage";
+import { collection, addDoc, doc, setDoc, serverTimestamp, getDoc } from "firebase/firestore";
 
-// Saving images first
-export const saveImageToFirestore = async (userId, collectionName, imageName, imageUrl) => {
-    if (!userId || !collectionName.trim()) {
-        alert("User ID and Collection Name are required!");
-        return;
-    }
-
+// Save a single image under a collection
+export const saveImageToFirestore = async (userId, collectionId, imageName, imageDataUrl) => {
     try {
-        const userRef = doc(db, "users", userId);
-        const collectionRef = collection(userRef, "collections");
-        const collectionDoc = await addDoc(collectionRef, { collectionName });
-
-        await addDoc(collection(collectionDoc, "images"), {
-            name: imageName,
-            url: imageUrl,
-        });
-
-        return collectionDoc.id; // Return collection ID to link later
+      const storageRef = ref(storage, `users/${userId}/collections/${collectionId}/${imageName}`);
+      
+      // Upload image data
+      await uploadString(storageRef, imageDataUrl, 'data_url');
+      const downloadUrl = await getDownloadURL(storageRef);
+  
+      // Add image metadata to Firestore under collection
+      const imageDocRef = collection(db, "users", userId, "collections", collectionId, "images");
+      await addDoc(imageDocRef, {
+        name: imageName,
+        url: downloadUrl,
+        timestamp: serverTimestamp(),
+      });
+  
+      return downloadUrl; // Return for UI use
     } catch (error) {
-        console.error("Error saving image:", error);
-        alert("Failed to save image. Please try again.");
+      console.error("Error saving image:", error);
+      throw error;
     }
-};
-
-// Saving the info and Story generated
-export const saveStoryToFirestore = async (userId, collectionId, storyName, genre, narrative) => {
-    if (!userId || !collectionId || !storyName.trim() || !genre.trim() || !narrative.trim()) {
-        alert("Missing required fields!");
-        return;
-    }
-
+  };
+  
+  // Create a new collection and return the new collectionId
+  export const createImageCollection = async (userId, collectionName) => {
     try {
-        const userRef = doc(db, "users", userId);
-        const collectionRef = doc(userRef, "collections", collectionId);
-
-        await setDoc(collectionRef, { storyName, genre, narrative }, { merge: true });
-
-        alert("Story saved successfully!");
+      const colRef = doc(collection(db, "users", userId, "collections"));
+      await setDoc(colRef, {
+        name: collectionName,
+        createdAt: serverTimestamp(),
+      });
+      return colRef.id;
     } catch (error) {
-        console.error("Error saving story:", error);
-        alert("Failed to save story.");
+      console.error("Error creating collection:", error);
+      throw error;
     }
-};
+  };
+  
+  // Save the story under the same collection
+  export const saveStoryToFirestore = async (userId, collectionId, storyName, genre, narrative) => {
+    try {
+      const storyDocRef = doc(db, "users", userId, "collections", collectionId, "story");
+      await setDoc(storyDocRef, {
+        title: storyName,
+        genre,
+        content: narrative,
+        timestamp: serverTimestamp(),
+      });
+    } catch (error) {
+      console.error("Error saving story:", error);
+      throw error;
+    }
+  };
+
+  const getStoryText = async (userId, collectionId) => {
+    const storyRef = doc(db, "users", userId, "collections", collectionId, "story");
+    const storySnap = await getDoc(storyRef);
+    if (storySnap.exists()) {
+      return storySnap.data().content;
+    } else {
+      console.warn("No story found.");
+      return null;
+    }
+  };
