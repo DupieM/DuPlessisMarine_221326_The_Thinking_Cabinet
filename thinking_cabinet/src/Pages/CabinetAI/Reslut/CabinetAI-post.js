@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { saveStoryToFirestore } from "../../../services/DbService";
+
 import { useSharedData } from "../../../componements/SharedDataProvider";
+import { saveStoryToCollection } from "../../../services/DbService";
 
 const API_URL = "https://api.openai.com/v1/chat/completions";
 
 function CabinetAIPost() {
+
   const { sharedData } = useSharedData();
   const [narrative, setNarrative] = useState("");
   const [chatMessages, setChatMessages] = useState([]);
@@ -75,12 +77,16 @@ function CabinetAIPost() {
   
     const cleanCollectionId = extractCollectionId(collectionId); // Clean collection ID
   
-    // Assuming you want to save the story for the first image
-    const imageId = images[0].id; // You may need to adjust this based on how images are structured
-  
-    await saveStoryToFirestore(userId, cleanCollectionId, imageId, storyName, genre, narrative);
-    alert("Story saved!");
+    try {
+      // Save the story without specifying an imageId (it will be saved directly under images collection)
+      await saveStoryToCollection(userId, cleanCollectionId, storyName, genre, narrative);
+      alert("Story saved successfully under images!");
+    } catch (error) {
+      console.error("Error saving story:", error);
+      alert("Failed to save the story.");
+    }
   };
+  
 
   const handleChat = async () => {
     if (!userMessage.trim()) return;

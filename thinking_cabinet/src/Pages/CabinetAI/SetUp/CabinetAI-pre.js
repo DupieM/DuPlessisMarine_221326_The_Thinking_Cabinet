@@ -48,17 +48,34 @@ function CabinetAIPre() {
       alert("Collection name is required!");
       return;
     }
-
-    const savedCollectionId = await saveImageToFirestore(userId, collectionName, tempImageList[0].name, tempImageList[0].url);
+  
+    const savedImages = [];
+  
+    const savedCollectionId = await saveImageToFirestore(
+      userId,
+      collectionName,
+      tempImageList[0].name,
+      tempImageList[0].url
+    );
+  
+    savedImages.push({ ...tempImageList[0], id: savedCollectionId });
+  
     for (let i = 1; i < tempImageList.length; i++) {
-      await saveImageToFirestore(userId, collectionName, tempImageList[i].name, tempImageList[i].url, savedCollectionId);
+      const id = await saveImageToFirestore(
+        userId,
+        collectionName,
+        tempImageList[i].name,
+        tempImageList[i].url,
+        savedCollectionId
+      );
+      savedImages.push({ ...tempImageList[i], id });
     }
-
+  
     setCollectionId(savedCollectionId);
-    setImages(tempImageList);
+    setImages(savedImages);
     setTempImageList([]);
     setShowSaveButton(false);
-    alert(`Collection '${collectionName}' with ${images.length} images saved!`);
+    alert(`Collection '${collectionName}' with ${savedImages.length} images saved!`);
   };
 
   const handleCreateStory = () => {
