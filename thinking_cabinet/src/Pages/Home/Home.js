@@ -63,8 +63,8 @@ function Home() {
             <img src={quate1} className="quate"/>
 
             <p className="qoute_text">
-              “This is a thought provoking platform that challenges <br/>
-              my assumptions and my perspective.”
+              “ This is a thought provoking platform that challenges <br/>
+              assumptions and perspectives ”
             </p>
 
             <img src={quate2} className="quate"/>

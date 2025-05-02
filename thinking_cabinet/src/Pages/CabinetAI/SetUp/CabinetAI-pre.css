@@ -1,8 +1,95 @@
+.Box {
+    background-color: #70826745;
+    color: #ebe4d1;
+    padding: 20px;
+    width: 1300px;
+    font-size: 26pt;
+    font-weight: 500;
+    margin-top: 40px;
+    border-radius: 25px;
+    margin-left: 140px;
+}
 
+.heading {
+    margin-top: 40px;
+    margin-left: '70px';
+    font-weight: bold;
+    color: #ebe4d1;
+    font-size: 50pt;
+    margin-bottom: 30px;
+}
 
+.Stn {
+    background-color: #AEC0CC;
+    width: 740px;
+    height: 230px;
+    margin-top: 40px;
+    margin-bottom: 40px;
+    padding-top: 20px;
+    padding-bottom: 10px;
+    padding-left: 50px;
+    padding-right: 50px;
+    border-radius: 10px;
+    margin-left: 420px;
+}
+
+.Stn2 {
+    background-color: #AEC0CC;
+    width: 740px;
+    height: 180px;
+    margin-top: 40px;
+    margin-bottom: 80px;
+    padding-top: 20px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-radius: 10px;
+    margin-left: 420px;
+}
+
+.subheading{
+    font-size: 35pt;
+    line-height: 50px;
+    font-weight: 600;
+    color: #2d362f;
+}
+
+.input {
+    background-color: #FFFAF4;
+    border: 0;
+    width: 260px;
+    height: 40px;
+    font-size: 18pt;
+    padding-left: 12px;
+    border-radius: 12px;
+    color: #11120D;
+    margin-top: 10px;
+}
+
+.dropdown {
+    width: 260px;
+    height: 40px;
+    font-size: 12pt;
+    border-radius: 12px;
+    margin-top: 10px;
+}
+
+.button {
+    background-color: #565448;
+    font-size: 30pt;
+    font-weight: 600;
+    padding-top: 0px;
+    padding-bottom: 10px;
+    padding-left: 30px;
+    padding-right: 30px;
+    text-decoration: none;
+    color: #D8D0BD;
+    border-radius: 70px;
+    margin-left: 0px;
+}
 
 .footer {
-    margin-top: 50px;
+    margin-top: 120px;
     padding: 15px;
     background-color: #94A98A;
 }

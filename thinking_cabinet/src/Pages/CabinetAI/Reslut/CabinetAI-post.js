@@ -3,6 +3,7 @@ import axios from "axios";
 
 import { useSharedData } from "../../../componements/SharedDataProvider";
 import { saveStoryToCollection } from "../../../services/DbService";
+import '../Reslut/CabinetAI-post.css'
 
 const API_URL = "https://api.openai.com/v1/chat/completions";
 
