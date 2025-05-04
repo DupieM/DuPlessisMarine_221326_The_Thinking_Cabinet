@@ -120,7 +120,7 @@ function CabinetAIPost() {
   };
 
   return (
-    <div className="page-container">
+    <div className="App2">
       <h2>Generated Story</h2>
       <button onClick={generateStory}>Generate Story</button>
       <p>{narrative}</p>

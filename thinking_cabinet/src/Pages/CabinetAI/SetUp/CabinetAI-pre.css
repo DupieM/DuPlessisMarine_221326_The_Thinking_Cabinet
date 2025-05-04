@@ -8,6 +8,7 @@
     margin-top: 40px;
     border-radius: 25px;
     margin-left: 140px;
+    overflow: visible;
 }
 
 .heading {
@@ -17,6 +18,57 @@
     color: #ebe4d1;
     font-size: 50pt;
     margin-bottom: 30px;
+}
+
+.upload-container {
+    background-color: #80807E;
+    border-radius: 20px;
+    width: 200px;
+    height: 300px;
+    padding: 20px;
+    color: #11120D;
+    text-align: center;
+    margin-right: 20px;
+}
+  
+.upload-heading {
+    font-weight: bold;
+    font-size: 16pt;
+    margin-bottom: 15px;
+}
+  
+.upload-box {
+    display: inline-block;
+    width: 100px;
+    height: 130px;
+    background-color: #D8D0BD;
+    color: #3d3c34;
+    font-size: 60pt;
+    font-weight: 500;
+    border-radius: 20px;
+    cursor: pointer;
+    line-height: 130px;
+    user-select: none;
+    margin-bottom: 10px;
+}
+  
+.upload-count {
+    font-size: 14pt;
+    font-weight: 600;
+}
+
+
+
+.save_button {
+    padding: 8px 17px;
+    background-color: #D8D0BD;
+    color: #3d3c34;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    margin-top: 10px;
+    font-size: 15pt;
 }
 
 .Stn {
@@ -89,7 +141,7 @@
 }
 
 .footer {
-    margin-top: 120px;
+    margin-top: 90px;
     padding: 15px;
     background-color: #94A98A;
 }

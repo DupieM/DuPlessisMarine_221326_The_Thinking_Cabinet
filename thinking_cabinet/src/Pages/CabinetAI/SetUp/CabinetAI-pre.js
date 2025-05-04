@@ -88,6 +88,8 @@ function CabinetAIPre() {
     navigate("/cabinetAI-post");
   };
 
+
+
   return (
     <div className="App2">
 
@@ -103,158 +105,91 @@ function CabinetAIPre() {
 
       <h2 className="heading">Your Wunderkammer Objects</h2>
 
-      <div>
-      <label
-        htmlFor="file-upload"
-        style={{
-          display: "inline-block",
-          width: "100px",
-          height: "120px",
-          backgroundColor: "#888",
-          color: "#fff",
-          fontSize: "40px",
-          textAlign: "center",
-          lineHeight: "120px",
-          borderRadius: "20px",
-          cursor: "pointer",
-          marginRight: "15px",
-          userSelect: "none",
-        }}
-      >
-        +
-      </label>
-      <input
-        id="file-upload"
-        type="file"
-        multiple
-        onChange={handleUpload}
-        style={{ display: "none" }}
-      />
-      <p style={{ marginTop: "10px", fontWeight: "bold" }}>{tempImageList.length} images selected</p>
+      
+      <div className="upload-container">
+        <p className="upload-heading">Upload your objects</p>
 
-      {/* Carousel Section */}
-      <div className="carousel" style={{ display: "flex", overflowX: "auto", padding: "20px 0" }}>
-        {[...images, ...tempImageList].map((img, index) => (
-          <div
-            key={index}
-            style={{
-              flex: "0 0 auto",
-              marginRight: "15px",
-              textAlign: "center",
-              background: "#fff",
-              padding: "10px",
-              borderRadius: "20px",
-              boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
-              width: "120px",
-            }}
-          >
-            <img
-              src={img.url}
-              alt={img.name}
-              style={{
-                width: "100%",
-                height: "100px",
-                objectFit: "cover",
-                borderRadius: "12px",
-                marginBottom: "10px",
-              }}
-            />
-            <div style={{ fontSize: "14px", fontWeight: "500" }}>{img.name.split(".")[0]}</div>
-          </div>
-        ))}
+        <label htmlFor="file-upload" className="upload-box">
+          +
+        </label>
+        <input
+          id="file-upload"
+          type="file"
+          multiple
+          onChange={handleUpload}
+          style={{ display: "none" }}
+        />
+        <p className="upload-count">{tempImageList.length} images selected</p>
       </div>
+        
+
+        {/* Carousel Section */}
+        <div >
+          <div className="carousel" style={{ display: "flex", overflowX: "auto", padding: "20px 0" }}>
+            {[...images, ...tempImageList].map((img, index) => (
+              <div
+                key={index}
+                style={{
+                  flex: "0 0 auto",
+                  marginRight: "15px",
+                  textAlign: "center",
+                  background: "#fff",
+                  padding: "6px",
+                  borderRadius: "20px",
+                  width: "120px",
+                  height: '167px'
+                }}
+              >
+                <img
+                  src={img.url}
+                  alt={img.name}
+                  style={{
+                    width: "100px",
+                    height: "120px",
+                    objectFit: "cover",
+                    borderRadius: "12px",
+                    marginBottom: "10px",
+                  }}
+                />
+                <div style={{ fontSize: "14px", fontWeight: "500" }}>{img.name.split(".")[0]}</div>
+              </div>
+            ))}
+          </div>
+        </div>
 
       {/* Save Button */}
       {showSaveButton && (
-        <button
-          onClick={handleSaveImages}
-          style={{
-            padding: "10px 20px",
-            backgroundColor: "#4caf50",
-            color: "#fff",
-            border: "none",
-            borderRadius: "8px",
-            cursor: "pointer",
-            fontWeight: "bold",
-            marginTop: "10px",
-          }}
-        >
+        <button onClick={handleSaveImages} className="save_button">
           Save All Images to Collection
         </button>
       )}
 
-      {/* Chosen Objects Section */}
-      {images.length > 0 && (
-        <div style={{ marginTop: "30px" }}>
-          <h2 style={{ fontWeight: "600" }}>Chosen Objects</h2>
-          <div
-            style={{
-              display: "flex",
-              gap: "10px",
-              background: "#a5bfa7",
-              padding: "15px",
-              borderRadius: "20px",
-              marginTop: "10px",
-            }}
-          >
-            {images.map((img, idx) => (
-              <img
-                key={idx}
-                src={img.url}
-                alt={img.name}
-                style={{
-                  width: "60px",
-                  height: "60px",
-                  borderRadius: "10px",
-                  objectFit: "cover",
-                }}
-              />
-            ))}
-          </div>
-        </div>
-      )}
-      </div>
-
-      {/* <input type="file" onChange={handleUpload} />
-      <p>{tempImageList.length} images selected</p>
-
-      <div className="carousel" style={{ display: "flex", overflowX: "auto" }}>
-        {[...images, ...tempImageList].map((img, index) => (
-          <div key={index} style={{ marginRight: "10px", textAlign: "center" }}>
-            <img src={img.url} alt={img.name} style={{ width: "100px", height: "100px", borderRadius: "10px" }} />
-            <div>{img.name}</div>
-          </div>
-        ))}
-      </div>
-
-      {showSaveButton && <button onClick={handleSaveImages}>Save All Images to Collection</button>} */}
-
       <div className="Stn">
-        <h7 className="subheading">What would you like the story to be called?</h7>
+        <h3 className="subheading">What would you like the story to be called?</h3>
         <br/>
         <br/>
         <input className="input" type="text" placeholder="Name of Story" value={storyName} onChange={(e) => setStoryName(e.target.value)} />
       </div>
 
       <div className="Stn2">
-        <h7 className="subheading">What genre is your story?</h7>
+        <h3 className="subheading">What genre is your story?</h3>
         <br/>
         <br/>
         <select className="dropdown" value={genre} onChange={(e) => setGenre(e.target.value)}>
           <option value="">Select Genre</option>
+          <option value="Romance">Romance</option>
           <option value="Fantasy">Fantasy</option>
-          <option value="Sci-Fi">Sci-Fi</option>
+          <option value="Science Fiction">Science Fiction</option>
+          <option value="Mystery">Mystery</option>
+          <option value="Horror">Horror</option>
           <option value="Adventure">Adventure</option>
-          <option value="?????">?????</option>
-          <option value="?????">?????</option>
-          <option value="?????">?????</option>
-          <option value="?????">?????</option>
-          <option value="?????">?????</option>
-          <option value="?????">?????</option>
+          <option value="Drama">Drama</option>
+          <option value="Poetry">Poetry</option>
+          <option value="Thriller">Thriller</option>
         </select>
       </div>
 
-      <Link onClick={handleCreateStory} className="button">Create Story</Link>
+      <button onClick={handleCreateStory} className="button">Create Story</button>
 
 
       <footer>
