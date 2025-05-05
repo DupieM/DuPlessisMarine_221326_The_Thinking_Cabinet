@@ -121,49 +121,52 @@ function CabinetAIPost() {
 
   return (
     <div className="App2">
-      <h2>Generated Story</h2>
+      <h2 className="heading">Generated Story</h2>
       <button onClick={generateStory}>Generate Story</button>
-      <p>{narrative}</p>
 
-      <button onClick={handleSaveStory}>Save Story</button>
+      <div className="story-output">
+        <p>{narrative}</p>
+      </div>
+      
 
-      <h3>Chat with AI</h3>
-      <select
-        onChange={(e) => {
-          if (e.target.value) setUserMessage(e.target.value);
-        }}
-      >
-        <option value="">Questions to ask</option>
-        {questions.map((q, idx) => (
-          <option key={idx} value={q}>
-            {q}
-          </option>
-        ))}
-      </select>
+      <button className="btn-save" onClick={handleSaveStory}>Save Story</button>
 
-      <input
-        type="text"
-        placeholder="Type your message..."
-        value={userMessage}
-        onChange={(e) => setUserMessage(e.target.value)}
-      />
-      <button onClick={handleChat}>Send</button>
+      <div className="chat-section">
+        <h3>Ask AI about your story:</h3>
 
-      <div className="chat-container">
-        {chatMessages.map((msg, idx) => (
-          <div key={idx} style={{ textAlign: msg.role === "user" ? "right" : "left" }}>
-            <p
-              style={{
-                background: msg.role === "user" ? "#cce5ff" : "#d4edda",
-                padding: "10px",
-                borderRadius: "10px",
-                display: "inline-block",
-              }}
+        <div className="chat-container">
+          {chatMessages.map((msg, idx) => (
+            <div
+              key={idx}
+              className={`chat-message ${msg.role === "user" ? "user" : "ai"}`}
             >
               {msg.content}
-            </p>
-          </div>
-        ))}
+            </div>
+          ))}
+        </div>
+
+        <div className="chat-input-group">
+          <input
+            className="chat-input"
+            type="text"
+            placeholder="Type your question..."
+            value={userMessage}
+            onChange={(e) => setUserMessage(e.target.value)}
+          />
+          <button className="btn-send" onClick={handleChat}>Send</button>
+        </div>
+
+        <select
+          onChange={(e) => e.target.value && setUserMessage(e.target.value)}
+          className="dropdown"
+        >
+          <option value="">Pick a question...</option>
+          {questions.map((q, idx) => (
+            <option key={idx} value={q}>{q}</option>
+          ))}
+        </select>
+
+        
       </div>
     </div>
   );
