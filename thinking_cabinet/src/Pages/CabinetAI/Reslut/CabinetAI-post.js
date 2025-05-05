@@ -131,9 +131,9 @@ function CabinetAIPost() {
 
       <button className="btn-save" onClick={handleSaveStory}>Save Story</button>
 
-      <div className="chat-section">
-        <h3>Ask AI about your story:</h3>
+      <h3 className="heading">Ask AI about your story:</h3>
 
+      <div className="chat-section">
         <div className="chat-container">
           {chatMessages.map((msg, idx) => (
             <div

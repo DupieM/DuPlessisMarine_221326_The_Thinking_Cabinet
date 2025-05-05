@@ -27,17 +27,20 @@
   border-radius: 12px;
   padding: 30px;
   margin-bottom: 30px;
-  margin-left: 80px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   color: #ebe4d1;
   font-size: 15pt;
   width: 1400px;
+  margin-left: 80px;
 }
 
 .chat-section {
-  background: #e9f1f7;
+  background: #20644d63;
   padding: 20px;
   border-radius: 12px;
+  width: 1400px;
+  height: 600px;
+  margin-left: 80px;
 }
 
 .dropdown {
@@ -62,7 +65,7 @@
 }
 
 .chat-container {
-  max-height: 300px;
+  height: 500px;
   overflow-y: auto;
 }
 
@@ -74,14 +77,17 @@
 }
 
 .chat-message.user {
-  background-color: #cce5ff;
+  background-color: #565448;
+  color: #ebdebf;
   align-self: flex-end;
   text-align: right;
   margin-left: auto;
+  font-size: 15pt;
 }
 
 .chat-message.ai {
-  background-color: #d4edda;
+  background-color: #D8D0BD;
+  color: #203023;
   align-self: flex-start;
   text-align: left;
   margin-right: auto;
