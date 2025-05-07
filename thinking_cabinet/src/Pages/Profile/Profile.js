@@ -8,20 +8,18 @@ import { onAuthStateChanged } from 'firebase/auth';
 function Profile() {
   const [image, setImage] = useState(null);
   const fileInputRef = useRef(null);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState('');
   const [uploading, setUploading] = useState(false);
   const [userData, setUserData] = useState({ displayName: '', email: '', password: '' });
+  const [profileImageUrl, setProfileImageUrl] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [collections, setCollections] = useState([]);
-  const [selectedCollectionId, setSelectedCollectionId] = useState('');
-  const [images, setImages] = useState([]);
-  const [selectedNarrative, setSelectedNarrative] = useState('');
+  const [collectionsData, setCollectionsData] = useState([]);
 
+  // Load user data
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (authUser) => {
       if (authUser) {
         setUser(authUser);
-
         const userDocRef = doc(db, 'users', authUser.uid);
         const userDocSnap = await getDoc(userDocRef);
 
@@ -30,8 +28,9 @@ function Profile() {
           setUserData({
             displayName: data.displayName || authUser.displayName || 'No name set',
             email: authUser.email,
-            password: data.password || '', // Fetch password from Firestore (assumes you saved it)
+            password: data.password || '',
           });
+          setProfileImageUrl(data.profileImageUrl || '');
         } else {
           setUserData({
             displayName: authUser.displayName || 'No name set',
@@ -42,54 +41,65 @@ function Profile() {
       } else {
         setUser(null);
         setUserData({ displayName: '', email: '', password: '' });
+        setProfileImageUrl('');
       }
     });
 
     return () => unsubscribe();
   }, []);
 
+  // Load user collections with images and story
   useEffect(() => {
-    const fetchUserCollections = async () => {
-      if (!user) return;
+    const fetchUserCollectionsData = async () => {
+      if (!user) {
+        setCollectionsData([]); // Ensure collectionsData is empty if no user
+        console.log('No user logged in, skipping collection fetch.');
+        return;
+      }
+      console.log('Fetching collections for user:', user.uid);
       try {
         const collectionsRef = collection(db, 'users', user.uid, 'collections');
         const snapshot = await getDocs(collectionsRef);
-        const userCollections = snapshot.docs.map(doc => ({
-          id: doc.id,
-          name: doc.data().collectionName || doc.id,
-          narrative: doc.data().narrative || '',
-        }));
-        setCollections(userCollections);
+        console.log('Collections snapshot:', snapshot);
+        const allCollectionsData = [];
+
+        for (const collectionDoc of snapshot.docs) {
+          const collectionId = collectionDoc.id;
+          const collectionName = collectionDoc.data().collectionName || collectionId;
+          console.log('Processing collection:', collectionId, 'Name:', collectionName);
+
+          const imagesRef = collection(db, 'users', user.uid, 'collections', collectionId, 'images');
+          const imagesSnapshot = await getDocs(imagesRef);
+          const collectionImages = imagesSnapshot.docs
+            .filter(doc => doc.id !== 'story')
+            .map(doc => ({
+              id: doc.id,
+              imageUrl: doc.data().url,
+            }));
+          console.log('Images for collection', collectionId, ':', collectionImages);
+
+          const storyRef = doc(db, 'users', user.uid, 'collections', collectionId, 'images', 'story');
+          const storySnap = await getDoc(storyRef);
+          const collectionStory = storySnap.exists() ? storySnap.data().narrative : 'No story available';
+          console.log('Story for collection', collectionId, ':', collectionStory);
+
+          allCollectionsData.push({
+            id: collectionId,
+            name: collectionName,
+            images: collectionImages,
+            story: collectionStory,
+          });
+        }
+        setCollectionsData(allCollectionsData);
+        console.log('Fetched collections data:', allCollectionsData);
       } catch (error) {
-        console.error('Error fetching collections:', error);
+        console.error('Error fetching collections data:', error);
+        setCollectionsData([]); // Handle potential errors by setting to empty
       }
     };
 
-    fetchUserCollections();
+    fetchUserCollectionsData();
   }, [user]);
-
-  const handleCollectionChange = async (e) => {
-    const collectionId = e.target.value;
-    setSelectedCollectionId(collectionId);
-    setImages([]);
-
-    const selectedCollection = collections.find(c => c.id === collectionId);
-    setSelectedNarrative(selectedCollection?.narrative || '');
-
-    if (!user || !collectionId) return;
-
-    try {
-      const imagesRef = collection(db, 'users', user.uid, 'collections', collectionId, 'images');
-      const snapshot = await getDocs(imagesRef);
-      const imageData = snapshot.docs.map(doc => ({
-        id: doc.id,
-        imageUrl: doc.data().imageUrl
-      }));
-      setImages(imageData);
-    } catch (error) {
-      console.error('Error fetching images:', error);
-    }
-  };
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -120,6 +130,7 @@ function Profile() {
         profileImageUrl: downloadURL,
       });
 
+      setProfileImageUrl(downloadURL);
       setImage(null);
       alert("Profile image updated successfully!");
     } catch (error) {
@@ -134,11 +145,12 @@ function Profile() {
     <div className="App2">
       <h2 style={{ marginLeft: '70px', fontWeight: 'bold', color: '#ebe4d1', fontSize: '40pt' }}>Update Profile</h2>
 
+      {/* Profile Picture Section */}
       <div className="profile-picture-container">
         <div
           className="profile-picture"
           style={{
-            backgroundImage: `url(${image ? URL.createObjectURL(image) : (user?.photoURL || 'placeholder-image.png')})`,
+            backgroundImage: `url(${image ? URL.createObjectURL(image) : (profileImageUrl || 'placeholder-image.png')})`,
           }}
         />
         <button className="upload-button" onClick={handleClick} disabled={uploading}>
@@ -158,17 +170,18 @@ function Profile() {
         />
       </div>
 
+      {/* User Information */}
       <div style={{ marginLeft: '70px', marginTop: '20px', color: '#ebe4d1' }}>
         <p><strong>Name:</strong> {userData.displayName}</p>
         <p><strong>Email:</strong> {userData.email}</p>
         <p>
-          <strong>Password:</strong> 
-          {showPassword 
-            ? ` ${userData.password}` 
-            : ` ${'•'.repeat(userData.password.length || 0)}` 
+          <strong>Password:</strong>
+          {showPassword
+            ? ` ${userData.password}`
+            : ` ${'•'.repeat(userData.password.length || 0)}`
           }
-          <button 
-            onClick={() => setShowPassword(!showPassword)} 
+          <button
+            onClick={() => setShowPassword(!showPassword)}
             style={{ marginLeft: '10px', padding: '2px 6px', fontSize: '0.8em' }}
           >
             {showPassword ? 'Hide' : 'Show'}
@@ -179,36 +192,32 @@ function Profile() {
       <h2 style={{ marginLeft: '70px', fontWeight: 'bold', color: '#ebe4d1', fontSize: '40pt' }}>Cabinet</h2>
 
       <div style={{ marginLeft: '70px', color: '#ebe4d1' }}>
-        <label htmlFor="collectionDropdown">Select a Collection: </label>
-        <select
-          id="collectionDropdown"
-          onChange={handleCollectionChange}
-          value={selectedCollectionId}
-          style={{ marginLeft: '10px', padding: '5px' }}
-        >
-          <option value="">-- Choose --</option>
-          {collections.map(col => (
-            <option key={col.id} value={col.id}>{col.name}</option>
-          ))}
-        </select>
-
-        {selectedNarrative && (
-          <p style={{ marginTop: '10px', fontStyle: 'italic', maxWidth: '500px' }}>
-            <strong>Story:</strong> {selectedNarrative}
-          </p>
-        )}
-
-        <div style={{ display: 'flex', flexWrap: 'wrap', marginTop: '20px' }}>
-          {images.map((img, index) => (
-            <div key={img.id || index} style={{ margin: '10px' }}>
-              <img
-                src={img.imageUrl}
-                alt={`Image ${index + 1}`}
-                style={{ width: '150px', height: '150px', objectFit: 'cover', borderRadius: '8px' }}
-              />
+        {collectionsData.map(collection => (
+          <div key={collection.id} style={{ marginBottom: '30px', padding: '15px', backgroundColor: '#5c7a68', borderRadius: '8px', maxWidth: '800px' }}>
+            <h3 style={{ color: '#ebe4d1', fontWeight: 'bold', marginBottom: '10px' }}>{collection.name}</h3>
+            {collection.story && (
+              <div style={{ marginBottom: '15px', padding: '10px', backgroundColor: '#739072', borderRadius: '5px' }}>
+                <strong style={{ color: '#d1c0a3' }}>Story:</strong>
+                <p style={{ marginTop: '5px', fontStyle: 'italic', color: '#ebe4d1' }}>
+                  {collection.story}
+                </p>
+              </div>
+            )}
+            <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+              {collection.images.map((img, index) => (
+                <div key={img.id || index} style={{ margin: '10px', backgroundColor: '#739072', borderRadius: '8px', padding: '8px' }}>
+                  <img
+                    src={img.imageUrl}
+                    alt={`Image ${index + 1}`}
+                    style={{ width: '150px', height: '150px', objectFit: 'cover', borderRadius: '8px' }}
+                  />
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+            {collection.images.length === 0 && <p style={{ fontStyle: 'italic', color: '#d1c0a3' }}>No images in this collection.</p>}
+          </div>
+        ))}
+        {collectionsData.length === 0 && <p style={{ fontStyle: 'italic', color: '#d1c0a3' }}>No collections available.</p>}
       </div>
 
       <footer>
@@ -216,7 +225,6 @@ function Profile() {
           <h6 className="footer_text">Copyright © 2025 The Thinking Cabinet. All rights reserved.</h6>
         </div>
       </footer>
-
     </div>
   );
 }
