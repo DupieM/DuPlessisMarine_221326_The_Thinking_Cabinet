@@ -52,27 +52,26 @@ function CabinetAIPre() {
   
     const savedImages = [];
   
-    const savedCollectionId = await saveImageToFirestore(
-      userId,
-      collectionName,
-      tempImageList[0].name,
-      tempImageList[0].url
-    );
+    // const savedCollectionId = await saveImageToFirestore(
+    //   userId,
+    //   collectionName,
+    //   tempImageList[0].name,
+    //   tempImageList[0].url
+    // );
   
-    savedImages.push({ ...tempImageList[0], id: savedCollectionId });
+    // savedImages.push({ ...tempImageList[0], id: savedCollectionId });
   
-    for (let i = 1; i < tempImageList.length; i++) {
+    for (let i = 0; i < tempImageList.length; i++) {
       const id = await saveImageToFirestore(
         userId,
         collectionName,
         tempImageList[i].name,
         tempImageList[i].url,
-        savedCollectionId
       );
       savedImages.push({ ...tempImageList[i], id });
     }
   
-    setCollectionId(savedCollectionId);
+    setCollectionId(collectionName);
     setImages(savedImages);
     setTempImageList([]);
     setShowSaveButton(false);

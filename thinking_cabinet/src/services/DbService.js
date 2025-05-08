@@ -45,9 +45,13 @@ export const saveImageToFirestore = async (userId, collectionId, imageName, imag
     await uploadString(storageRef, imageDataUrl, "data_url");
     const downloadUrl = await getDownloadURL(storageRef);
 
-    // Save image URL under Firestore
+    // Ensure collection document exists
+    const collectionDocRef = doc(db, "users", userId, "collections", collectionId);
+    await setDoc(collectionDocRef, { createdAt: serverTimestamp() }, { merge: true });
+
+    // Save image metadata in Firestore
     const imagesRef = collection(db, "users", userId, "collections", collectionId, "images");
-    const imageDocRef = await addDoc(imagesRef, {
+    await addDoc(imagesRef, {
       name: imageName,
       url: downloadUrl,
       timestamp: serverTimestamp(),

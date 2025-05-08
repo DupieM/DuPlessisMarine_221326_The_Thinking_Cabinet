@@ -63,6 +63,14 @@ function Profile() {
         console.log('Collections snapshot:', snapshot);
         const allCollectionsData = [];
 
+        console.log('...')
+        console.log(snapshot.size)
+        snapshot.forEach((doc) => {
+          console.log(doc.id, " => ", doc.data());
+        });
+
+        console.log('...')
+
         for (const collectionDoc of snapshot.docs) {
           const collectionId = collectionDoc.id;
           const collectionName = collectionDoc.data().collectionName || collectionId;
