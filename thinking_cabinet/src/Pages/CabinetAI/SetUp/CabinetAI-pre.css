@@ -20,16 +20,25 @@
     margin-bottom: 30px;
 }
 
+.container_box {
+    height: 270px;
+    width: 1000px;
+    /* background-color: #94A98A; */
+    margin-left: 260px;
+    margin-bottom: 20px;
+}
+
 .upload-container {
     background-color: #80807E;
     border-radius: 20px;
     width: 200px;
-    height: 300px;
+    height: 270px;
     padding: 20px;
     color: #11120D;
     text-align: center;
     margin-right: 20px;
     margin-left: 60px;
+    margin-top: 40px;
 }
   
 .upload-heading {
@@ -54,11 +63,31 @@
 }
   
 .upload-count {
-    font-size: 14pt;
+    font-size: 11pt;
     font-weight: 600;
 }
 
+.carousel_box {
+    background-color: #80807E;
+    width: 700px;
+    height: 270px;
+    padding: 30px;
+    padding-top: 10px;
+    margin-top: -270px;
+    margin-left: 300px;
+    border-radius: 20px;
+}
 
+.image_box {
+    flex: 0 0 auto;
+    margin-right: 15px;
+    text-align: center;
+    background-color: #fff;
+    padding: 6px;
+    border-radius: 20px;
+    width: 120px;
+    height: 190px
+}
 
 .save_button {
     padding: 8px 17px;
@@ -116,15 +145,15 @@
     padding-left: 12px;
     border-radius: 12px;
     color: #11120D;
-    margin-top: 10px;
+    margin-top: 26px;
 }
 
 .dropdown {
-    width: 260px;
-    height: 40px;
+    width: 0%;
+    height: 50px;
     font-size: 12pt;
     border-radius: 12px;
-    margin-top: 10px;
+    margin-top: 30px;
 }
 
 .button {
@@ -136,6 +165,7 @@
     padding-left: 30px;
     padding-right: 30px;
     text-decoration: none;
+    border: 0;
     color: #D8D0BD;
     border-radius: 70px;
     margin-left: 0px;

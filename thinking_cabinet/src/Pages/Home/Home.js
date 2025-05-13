@@ -6,10 +6,12 @@ import quate1 from "../../assets/Quoate_1.png"
 import quate2 from "../../assets/Quoate_2.png"
 import collection from "../../assets/collections.png"
 import { Link } from 'react-router-dom';
+import ScrollToTopButton from "../../componements/ScrollToTopButton";
 
 function Home() {
 
    const [userId, setUserId] = useState("");
+   const [showWelcome, setShowWelcome] = useState(true);
 
    useEffect(() => {
            const auth = getAuth();
@@ -23,6 +25,17 @@ function Home() {
     
 
     return (
+      <div>
+        {showWelcome && (
+          <div className="welcome-modal">
+            <div className="modal-content">
+              <h2>Welcome to Wunderkammer!</h2>
+              <p>We're glad to have you here.</p>
+              <button onClick={() => setShowWelcome(false)}>Close</button>
+            </div>
+          </div>
+        )}
+      
         <div className="App2">
 
             <div className="text">
@@ -63,11 +76,13 @@ function Home() {
             <img src={quate1} className="quate"/>
 
             <p className="qoute_text">
-              “ This is a thought provoking platform that challenges <br/>
-              assumptions and perspectives ”
+              This is a thought provoking platform that challenges <br/>
+              assumptions and perspectives
             </p>
 
             <img src={quate2} className="quate"/>
+
+            <ScrollToTopButton />
 
             <footer>
                 <div className="footer">
@@ -75,6 +90,7 @@ function Home() {
                 </div>
             </footer>
 
+        </div>
         </div>
     )
 }

@@ -4,6 +4,7 @@ import axios from "axios";
 import { useSharedData } from "../../../componements/SharedDataProvider";
 import { saveStoryToCollection } from "../../../services/DbService";
 import '../Reslut/CabinetAI-post.css'
+import ScrollToTopButton from "../../../componements/ScrollToTopButton";
 
 const API_URL = "https://api.openai.com/v1/chat/completions";
 
@@ -166,6 +167,13 @@ function CabinetAIPost() {
           ))}
         </select>
 
+        <ScrollToTopButton />
+
+        <footer>
+          <div className="footer">
+            <h6 className="footer_text">Copyright © 2025 The Thinking Cabinet. All rights reserved.</h6>
+          </div>
+        </footer>
         
       </div>
     </div>

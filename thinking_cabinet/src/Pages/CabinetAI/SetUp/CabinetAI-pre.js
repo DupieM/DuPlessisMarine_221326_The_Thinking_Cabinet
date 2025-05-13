@@ -4,6 +4,7 @@ import { saveImageToFirestore } from "../../../services/DbService";
 import { auth } from "../../../firebase";
 import { useSharedData } from "../../../componements/SharedDataProvider";
 import '../SetUp/CabinetAI-pre.css'
+import ScrollToTopButton from "../../../componements/ScrollToTopButton";
 
 function CabinetAIPre() {
   const { setSharedData } = useSharedData();
@@ -52,15 +53,6 @@ function CabinetAIPre() {
   
     const savedImages = [];
   
-    // const savedCollectionId = await saveImageToFirestore(
-    //   userId,
-    //   collectionName,
-    //   tempImageList[0].name,
-    //   tempImageList[0].url
-    // );
-  
-    // savedImages.push({ ...tempImageList[0], id: savedCollectionId });
-  
     for (let i = 0; i < tempImageList.length; i++) {
       const id = await saveImageToFirestore(
         userId,
@@ -104,41 +96,31 @@ function CabinetAIPre() {
 
       <h2 className="heading">Your Wunderkammer Objects</h2>
 
-      
-      <div className="upload-container">
-        <p className="upload-heading">Upload your objects</p>
 
-        <label htmlFor="file-upload" className="upload-box">
-          +
-        </label>
-        <input
-          id="file-upload"
-          type="file"
-          multiple
-          onChange={handleUpload}
-          style={{ display: "none" }}
-        />
-        <p className="upload-count">{tempImageList.length} images selected</p>
-      </div>
+
+      <div className="container_box">      
+        <div className="upload-container">
+          <p className="upload-heading">Upload your objects</p>
+
+          <label htmlFor="file-upload" className="upload-box">
+            +
+          </label>
+          <input
+            id="file-upload"
+            type="file"
+            multiple
+            onChange={handleUpload}
+            style={{ display: "none" }}
+          />
+          <p className="upload-count">{tempImageList.length} images loaded/added</p>
+        </div>
         
 
         {/* Carousel Section */}
-        <div >
+        <div className="carousel_box">
           <div className="carousel" style={{ display: "flex", overflowX: "auto", padding: "20px 0" }}>
             {[...images, ...tempImageList].map((img, index) => (
-              <div
-                key={index}
-                style={{
-                  flex: "0 0 auto",
-                  marginRight: "15px",
-                  textAlign: "center",
-                  background: "#fff",
-                  padding: "6px",
-                  borderRadius: "20px",
-                  width: "120px",
-                  height: '167px'
-                }}
-              >
+              <div className="image_box" key={index}>
                 <img
                   src={img.url}
                   alt={img.name}
@@ -147,14 +129,15 @@ function CabinetAIPre() {
                     height: "120px",
                     objectFit: "cover",
                     borderRadius: "12px",
-                    marginBottom: "10px",
+                    marginBottom: "16px",
                   }}
                 />
-                <div style={{ fontSize: "14px", fontWeight: "500" }}>{img.name.split(".")[0]}</div>
+                <div style={{ fontSize: "14px", fontWeight: "500", textAlign: 'center'}}>{img.name.split(".")[0]}</div>
               </div>
             ))}
           </div>
         </div>
+      </div>
 
       {/* Save Button */}
       {showSaveButton && (
@@ -165,16 +148,12 @@ function CabinetAIPre() {
 
       <div className="Stn">
         <h3 className="subheading">What would you like the story to be called?</h3>
-        <br/>
-        <br/>
         <input className="input" type="text" placeholder="Name of Story" value={storyName} onChange={(e) => setStoryName(e.target.value)} />
       </div>
 
       <div className="Stn2">
         <h3 className="subheading">What genre is your story?</h3>
-        <br/>
-        <br/>
-        <select className="dropdown" value={genre} onChange={(e) => setGenre(e.target.value)}>
+        <select className="dropdown" value={genre} onChange={(e) => setGenre(e.target.value)} style={{width: '270px', fontSize: '15pt', backgroundColor:'#FFFAF4'}}>
           <option value="">Select Genre</option>
           <option value="Romance">Romance</option>
           <option value="Fantasy">Fantasy</option>
@@ -190,6 +169,7 @@ function CabinetAIPre() {
 
       <button onClick={handleCreateStory} className="button">Create Story</button>
 
+      <ScrollToTopButton />
 
       <footer>
         <div className="footer">

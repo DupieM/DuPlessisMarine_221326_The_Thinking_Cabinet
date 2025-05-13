@@ -3,38 +3,84 @@ import { signUpUser, loginUser } from "../../services/authService";
 import { useNavigate } from "react-router-dom";
 import './Authentication.css';
 import plantImage from '../../assets/plant.jpg';
+import bcrypt from 'bcryptjs'; // ✅ only if you're manually storing passwords (NOT Firebase Auth)
 
 function Authentications() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSignUp, setIsSignUp] = useState(true);
-  const [error, setError] = useState(null);
-  const [imageOnRight, setImageOnRight] = useState(false); // Track image position
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [generalError, setGeneralError] = useState("");
+  const [imageOnRight, setImageOnRight] = useState(false);
   const navigate = useNavigate();
+
+  const validateEmail = (email) => {
+    return email.includes("@") && email.endsWith(".com");
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Reset all errors
+    setEmailError("");
+    setPasswordError("");
+    setGeneralError("");
+
+    let valid = true;
+
+    if (!email.trim()) {
+      setEmailError("Email is required.");
+      valid = false;
+    } else if (isSignUp && !validateEmail(email)) {
+      setEmailError("Email must contain '@' and end with '.com'");
+      valid = false;
+    }
+
+    if (!password.trim()) {
+      setPasswordError("Password is required.");
+      valid = false;
+    } else if (isSignUp && password.length < 6) {
+      setPasswordError("Password must be at least 6 characters long.");
+      valid = false;
+    }
+
+    if (!valid) return;
+
     try {
       if (isSignUp) {
-        await signUpUser(name, email, password);
+        // ✅ Hash password (ONLY if storing in Firestore, NOT Firebase Auth)
+        const salt = bcrypt.genSaltSync(10);
+        const hashedPassword = bcrypt.hashSync(password, salt);
+        await signUpUser(name, email, hashedPassword);
       } else {
-        await loginUser(email, password);
+        await loginUser(email, password); // raw password for login comparison
       }
       navigate("/home");
-    } catch (error) {
-      setError(error.message);
+    } catch (err) {
+      if (!isSignUp) {
+        setGeneralError("Incorrect email or password.");
+      } else {
+        setGeneralError(err.message || "Sign up failed.");
+      }
     }
   };
 
   const toggleForm = () => {
     setIsSignUp(!isSignUp);
-    setImageOnRight(!imageOnRight); // Toggle image position along with form
+    setImageOnRight(!imageOnRight);
+    // Clear all inputs and errors
+    setName("");
+    setEmail("");
+    setPassword("");
+    setEmailError("");
+    setPasswordError("");
+    setGeneralError("");
   };
 
   return (
     <div className="authentication-container">
-      {/* Image Container */}
       <div className={`image-container ${isSignUp ? "normal" : "right"}`}>
         <img
           src={plantImage}
@@ -46,13 +92,12 @@ function Authentications() {
         </button>
       </div>
 
-      {/* Form Container */}
       <div className={`form-container ${!isSignUp ? "move-left" : ""}`}>
         <h2 className="Heading">{isSignUp ? "Sign Up" : "Login"}</h2>
         <form onSubmit={handleSubmit}>
           {isSignUp && (
             <div className="form-group">
-              <label className="labels">Full Name</label> <br/>
+              <label className="labels">Full Name</label> <br />
               <input
                 type="text"
                 value={name}
@@ -61,32 +106,48 @@ function Authentications() {
               />
             </div>
           )}
+
           <div className="form-group">
-            <label className="labels-two">Email</label> <br/>
+            <label className="labels-two">Email</label> <br />
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
+            {emailError && <p className="error-message">{emailError}</p>}
           </div>
+
           <div className="form-group">
-            <label className="labels">Password</label> <br/>
+            <label className="labels">Password</label> <br />
             <input
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                if (isSignUp) {
+                  setPasswordError("");
+                }
+              }}
               required
             />
+            {isSignUp && password && (
+              <p style={{ color: "black", marginTop: "5px" }}>
+                Password needs to be 6 characters long.
+              </p>
+            )}
+            {passwordError && (
+              <p className="error-message">{passwordError}</p>
+            )}
           </div>
+
+          {generalError && (
+            <p className="error-message general">{generalError}</p>
+          )}
+
           <button type="submit" className="submit-button">
             {isSignUp ? "Sign Up" : "Login"}
           </button>
-
-          {/* <button className="toggle-button-two">
-            Try AI story generater
-          </button> */}
-
         </form>
       </div>
     </div>

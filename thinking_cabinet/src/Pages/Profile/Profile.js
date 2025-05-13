@@ -4,6 +4,7 @@ import { auth, storage, db } from '../../firebase';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { doc, updateDoc, getDoc, collection, getDocs } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
+import ScrollToTopButton from '../../componements/ScrollToTopButton';
 
 function Profile() {
   const [image, setImage] = useState(null);
@@ -227,6 +228,8 @@ function Profile() {
         ))}
         {collectionsData.length === 0 && <p style={{ fontStyle: 'italic', color: '#d1c0a3' }}>No collections available.</p>}
       </div>
+
+      <ScrollToTopButton />
 
       <footer>
         <div className="footer">
