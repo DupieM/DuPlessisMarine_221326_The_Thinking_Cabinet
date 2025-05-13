@@ -5,6 +5,7 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { doc, updateDoc, getDoc, collection, getDocs } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import ScrollToTopButton from '../../componements/ScrollToTopButton';
+import { getStoryText } from '../../services/DbService';
 
 function Profile() {
   const [image, setImage] = useState(null);
@@ -87,16 +88,24 @@ function Profile() {
             }));
           console.log('Images for collection', collectionId, ':', collectionImages);
 
-          const storyRef = doc(db, 'users', user.uid, 'collections', collectionId, 'images', 'story');
-          const storySnap = await getDoc(storyRef);
-          const collectionStory = storySnap.exists() ? storySnap.data().narrative : 'No story available';
-          console.log('Story for collection', collectionId, ':', collectionStory);
+          const storyRef = collection(db, 'users', user.uid, 'collections', collectionId, 'stories');
+          const storySnapshot = await getDocs(storyRef);
+
+          // Extract story data, accessing the narrative correctly
+          const collectionStories = storySnapshot.docs
+            .map(doc => ({
+              id: doc.id,
+              narrative: doc.data()?.story?.narrative || 'No story available', // Access nested narrative
+            }));
+
+          console.log('Stories for collection', collectionId, ':', collectionStories);
+
 
           allCollectionsData.push({
             id: collectionId,
             name: collectionName,
             images: collectionImages,
-            story: collectionStory,
+            story: collectionStories,
           });
         }
         setCollectionsData(allCollectionsData);
@@ -201,31 +210,33 @@ function Profile() {
       <h2 style={{ marginLeft: '70px', fontWeight: 'bold', color: '#ebe4d1', fontSize: '40pt' }}>Cabinet</h2>
 
       <div style={{ marginLeft: '70px', color: '#ebe4d1' }}>
-        {collectionsData.map(collection => (
-          <div key={collection.id} style={{ marginBottom: '30px', padding: '15px', backgroundColor: '#5c7a68', borderRadius: '8px', maxWidth: '800px' }}>
-            <h3 style={{ color: '#ebe4d1', fontWeight: 'bold', marginBottom: '10px' }}>{collection.name}</h3>
-            {collection.story && (
-              <div style={{ marginBottom: '15px', padding: '10px', backgroundColor: '#739072', borderRadius: '5px' }}>
-                <strong style={{ color: '#d1c0a3' }}>Story:</strong>
-                <p style={{ marginTop: '5px', fontStyle: 'italic', color: '#ebe4d1' }}>
-                  {collection.story}
+      {collectionsData.map(collection => (
+        <div key={collection.id} style={{ marginBottom: '30px', padding: '15px', backgroundColor: '#5c7a68', borderRadius: '8px', maxWidth: '800px' }}>
+          <h3 style={{ color: '#ebe4d1', fontWeight: 'bold', marginBottom: '10px' }}>{collection.name}</h3>
+          {collection.story && collection.story.length > 0 && (
+            <div style={{ marginBottom: '15px', padding: '10px', backgroundColor: '#739072', borderRadius: '5px' }}>
+              <strong style={{ color: '#d1c0a3' }}>Story:</strong>
+              {collection.story.map((storyItem, index) => (
+                <p key={index} style={{ marginTop: '5px', fontStyle: 'italic', color: '#ebe4d1' }}>
+                  {storyItem.narrative || 'No story available'}
                 </p>
-              </div>
-            )}
-            <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-              {collection.images.map((img, index) => (
-                <div key={img.id || index} style={{ margin: '10px', backgroundColor: '#739072', borderRadius: '8px', padding: '8px' }}>
-                  <img
-                    src={img.imageUrl}
-                    alt={`Image ${index + 1}`}
-                    style={{ width: '150px', height: '150px', objectFit: 'cover', borderRadius: '8px' }}
-                  />
-                </div>
               ))}
             </div>
-            {collection.images.length === 0 && <p style={{ fontStyle: 'italic', color: '#d1c0a3' }}>No images in this collection.</p>}
+          )}
+          <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+            {collection.images.map((img, index) => (
+              <div key={img.id || index} style={{ margin: '10px', backgroundColor: '#739072', borderRadius: '8px', padding: '8px' }}>
+                <img
+                  src={img.imageUrl}
+                  alt={`Image ${index + 1}`}
+                  style={{ width: '150px', height: '150px', objectFit: 'cover', borderRadius: '8px' }}
+                />
+              </div>
+            ))}
           </div>
-        ))}
+          {collection.images.length === 0 && <p style={{ fontStyle: 'italic', color: '#d1c0a3' }}>No images in this collection.</p>}
+        </div>
+      ))}
         {collectionsData.length === 0 && <p style={{ fontStyle: 'italic', color: '#d1c0a3' }}>No collections available.</p>}
       </div>
 

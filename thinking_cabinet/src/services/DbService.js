@@ -4,10 +4,10 @@ import { collection, addDoc, doc, setDoc, serverTimestamp, getDoc } from "fireba
 
 // Save story under a collection (not under a specific image)
 export const saveStoryToCollection = async (userId, collectionId, storyName, genre, narrative) => {
-    const imagesRef = collection(db, "users", userId, "collections", collectionId, "images");
+    const storyRef = collection(db, "users", userId, "collections", collectionId, "stories");
   
     // Create a new document in the images collection for the story
-    const newStoryDocRef = await addDoc(imagesRef, {
+    const newStoryDocRef = await addDoc(storyRef, {
       story: {
         title: storyName,
         genre: genre,
@@ -65,9 +65,9 @@ export const saveImageToFirestore = async (userId, collectionId, imageName, imag
 };
 
 // Fetch story text from stories/{storyName}
-export const getStoryText = async (userId, collectionId, storyName) => {
+export const getStoryText = async (userId, collectionId, storyId) => {
   try {
-    const storyRef = doc(db, "users", userId, "collections", collectionId, "stories", storyName);
+    const storyRef = doc(db, "users", userId, "collections", collectionId, "stories", storyId);
     const storySnap = await getDoc(storyRef);
     if (storySnap.exists()) {
       return storySnap.data().narrative;
@@ -80,3 +80,4 @@ export const getStoryText = async (userId, collectionId, storyName) => {
     return null;
   }
 };
+
