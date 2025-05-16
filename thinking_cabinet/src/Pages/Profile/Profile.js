@@ -161,7 +161,7 @@ function Profile() {
 
   return (
     <div className="App2">
-      <h2 style={{ marginLeft: '70px', fontWeight: 'bold', color: '#ebe4d1', fontSize: '40pt' }}>Update Profile</h2>
+      <h2 className='Heading_one'>Update Profile</h2>
 
       {/* Profile Picture Section */}
       <div className="profile-picture-container">
@@ -172,7 +172,7 @@ function Profile() {
           }}
         />
         <button className="upload-button" onClick={handleClick} disabled={uploading}>
-          {uploading ? 'Uploading...' : (image ? 'Change Image' : 'Upload Image')}
+          {uploading ? 'Uploading...' : (image ? 'Change Image' : 'Upload')}
         </button>
         {image && (
           <button className="save-button" onClick={handleUpload} disabled={uploading}>
@@ -237,7 +237,7 @@ function Profile() {
           {collection.images.length === 0 && <p style={{ fontStyle: 'italic', color: '#d1c0a3' }}>No images in this collection.</p>}
         </div>
       ))}
-        {collectionsData.length === 0 && <p style={{ fontStyle: 'italic', color: '#d1c0a3' }}>No collections available.</p>}
+        {collectionsData.length === 0 && <p style={{ fontStyle: 'italic', color: '#d1c0a3' }}>Collections Loading....</p>}
       </div>
 
       <ScrollToTopButton />

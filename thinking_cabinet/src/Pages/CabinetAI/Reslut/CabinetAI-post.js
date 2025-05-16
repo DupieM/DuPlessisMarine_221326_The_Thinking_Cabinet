@@ -199,12 +199,12 @@ function CabinetAIPost() {
       {/* Display images */}
       <div className="image-grid">
         {images.map((img, index) => (
-          <img key={index} src={img.url} alt={img.name} className="story-image" />
+          <img key={index} src={img.url} alt={img.name} className="story-image"  style={{width: '300px', height: '300px'}}/>
         ))}
       </div>
 
-      <p><strong>Story Name:</strong> {storyName}</p>
-      <p><strong>Genre:</strong> {genre}</p>
+      <p style={{color: '#ebe4d1'}}><strong>Story Name:</strong> {storyName}</p>
+      <p style={{color: '#ebe4d1'}}><strong>Genre:</strong> {genre}</p>
 
       {/* Generated story */}
       <div className="story-output">

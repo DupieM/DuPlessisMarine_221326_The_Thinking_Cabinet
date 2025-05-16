@@ -28,7 +28,7 @@ function Home() {
       <div>
         {showWelcome && (
           <div className="welcome-modal">
-            <div className="modal-content">
+            <div className="modal_content">
               <h2>Welcome to Wunderkammer!</h2>
               <p>We're glad to have you here.</p>
               <button onClick={() => setShowWelcome(false)}>Close</button>

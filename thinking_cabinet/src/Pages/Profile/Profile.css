@@ -1,3 +1,11 @@
+.Heading_one {
+  margin-top: 30px;
+  font-weight: bold;
+  color: #ebe4d1;
+  font-size: 45pt;
+  margin-left: 70px;
+}
+
 .profile-picture-container {
   display: flex;
   flex-direction: column;
@@ -6,8 +14,8 @@
 }
   
 .profile-picture {
-  width: 150px;
-  height: 150px;
+  width: 250px;
+  height: 250px;
   border-radius: 50%;
   background-size: cover;
   background-position: center;
@@ -17,13 +25,13 @@
   
 .upload-button,
 .save-button {
-  padding: 10px 20px;
+  padding: 5px 20px;
   background-color: #a0855b; /* Example button color */
   color: #ebe4d1;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 16pt;
   transition: background-color 0.3s ease;
   margin-top: 5px; /* Add some space between buttons */
 }
@@ -39,14 +47,9 @@
   cursor: not-allowed;
 }
 
-.Heading_one {
-  font-weight: bold;
-  color: #ebe4d1;
-  font-size: 40pt
-}
-
 .Heading_two {
   font-weight: bold;
   color: #ebe4d1;
   font-size: 40pt
 }
+
