@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Container, Nav, Navbar, Button } from "react-bootstrap";
 import { signOut } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { auth } from "../firebase";
 import './navbar.css';
 import icon from './avatar.png';

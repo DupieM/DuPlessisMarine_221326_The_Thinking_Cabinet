@@ -4,16 +4,19 @@ import './Home.css'
 import image1 from "../../assets/landing_image.png"
 import quate1 from "../../assets/Quoate_1.png"
 import quate2 from "../../assets/Quoate_2.png"
-import collection from "../../assets/collections.png"
+import collections from "../../assets/collections.png"
 import { Link } from 'react-router-dom';
 import ScrollToTopButton from "../../componements/ScrollToTopButton";
+import { getDocs, collection, limit } from "firebase/firestore";
+import { db } from "../../firebase";
 
 function Home() {
 
    const [userId, setUserId] = useState("");
    const [showWelcome, setShowWelcome] = useState(true);
+   const [usersCollections, setUsersCollections] = useState([]);
 
-   useEffect(() => {
+    useEffect(() => {
            const auth = getAuth();
            const user = auth.currentUser;
            if (user) {
@@ -22,14 +25,70 @@ function Home() {
              console.log("No user logged in.");
            }
     }, []);
-    
+
+  useEffect(() => {
+    fetchUsersWithCollections().then(data => setUsersCollections(data));
+  }, []);
+
+  const fetchUsersWithCollections = async () => {
+    try {
+      const usersRef = collection(db, "users");
+      const usersSnapshot = await getDocs(usersRef);
+
+      // Let's pick 3 random or first 3 users for demo
+      const users = usersSnapshot.docs.slice(0, 3);
+
+      const usersCollections = [];
+
+      for (const userDoc of users) {
+        const userId = userDoc.id;
+        const userData = userDoc.data();
+
+        // fetch user's collections (maybe just 1 collection per user to keep UI simple)
+        const collectionsRef = collection(db, "users", userId, "collections");
+        const collectionsSnapshot = await getDocs(collectionsRef);
+
+        if (collectionsSnapshot.size > 0) {
+          const firstCollectionDoc = collectionsSnapshot.docs[0];
+          const collectionId = firstCollectionDoc.id;
+          const collectionData = firstCollectionDoc.data();
+
+          // fetch images of this collection
+          const imagesRef = collection(db, "users", userId, "collections", collectionId, "images");
+          const imagesSnapshot = await getDocs(imagesRef);
+          const images = imagesSnapshot.docs.map(doc => doc.data().url);
+
+          usersCollections.push({
+            userId,
+            userName: userData.displayName || 'Unknown User',
+            collectionName: collectionData.collectionName || collectionId,
+            images,
+          });
+        }
+      }
+
+      return usersCollections;
+    } catch (error) {
+      console.error("Error fetching users collections:", error);
+      return [];
+    }
+  };
+
+
+  const closeWelcome = () => {
+    // setShowWelcome(false);
+    // Save to localStorage that popup was shown for this user
+    if (userId) {
+      localStorage.setItem(`welcomeShown_${userId}`, "true");
+    }
+  };
 
     return (
       <div>
-        {showWelcome && (
+         {showWelcome && (
           <div className="welcome-modal">
             <div className="modal_content">
-              <h2>Welcome to Wunderkammer!</h2>
+              <h3>Welcome to Wunderkammer!</h3>
               <p>We're glad to have you here.</p>
               <button onClick={() => setShowWelcome(false)}>Close</button>
             </div>
@@ -61,15 +120,27 @@ function Home() {
             
             <br/>
 
-            <div>
-              <div>
-                <img src={collection} className="collection"/>
-                <h1 className="CLN">Collection Name</h1>
-                <h3 className="User">User</h3>
-              </div>
+            <div className="collections-grid">
+              {usersCollections.length === 0 ? (
+                <p>Loading collections...</p>
+              ) : (
+                usersCollections.map((userCollection, idx) => (
+                  <div key={idx} className="collection-card">
+                    <h3>{userCollection.collectionName}</h3>
+                    <p><em>by {userCollection.userName}</em></p>
+                    <div className="images-row">
+                      {userCollection.images.length > 0 ? (
+                        userCollection.images.map((url, i) => (
+                          <img key={i} src={url} alt={`Collection ${userCollection.collectionName} img ${i + 1}`} className="collection-image" />
+                        ))
+                      ) : (
+                        <p>No images</p>
+                      )}
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
-
-            
 
             <br/>
 

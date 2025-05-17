@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { useSharedData } from "../../../componements/SharedDataProvider";
 import { createImageCollection, saveImageToFirestore, saveStoryToCollection } from "../../../services/DbService";
@@ -8,6 +8,9 @@ import ScrollToTopButton from "../../../componements/ScrollToTopButton";
 const API_URL = "https://api.openai.com/v1/chat/completions";
 
 function CabinetAIPost() {
+
+  const chatContainerRef = useRef(null);
+
   const { sharedData } = useSharedData();
   const { storyName, genre, images, userId } = sharedData;
 
@@ -16,6 +19,7 @@ function CabinetAIPost() {
   const [userMessage, setUserMessage] = useState("");
   const [showPopup, setShowPopup] = useState(false);
   const [collectionName, setCollectionName] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   const [questions] = useState({
     Debater: [
@@ -74,14 +78,17 @@ function CabinetAIPost() {
 
   // Auto-generate story on page load
   useEffect(() => {
-    const generateStory = async () => {
+    generateStory();
+  }, [images, genre, storyName]);
+
+  const generateStory = async () => {
       const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
       let imageDescriptions = "The story includes these images: ";
       images.forEach((img, i) => {
         imageDescriptions += `${img.name}${i === images.length - 1 ? "" : ", "}`;
       });
 
-      const prompt = `${imageDescriptions}. Write a ${genre} story titled "${storyName}" using around 150 to 200 words.`;
+      const prompt = `${imageDescriptions}. Write a ${genre} story titled "${storyName}" using around 150 to 170 words.`;
 
       try {
         const response = await axios.post(
@@ -115,8 +122,11 @@ function CabinetAIPost() {
       }
     };
 
-    generateStory();
-  }, [images, genre, storyName]);
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  }, [chatMessages]);
 
 
   const handleChat = async () => {
@@ -183,9 +193,9 @@ function CabinetAIPost() {
           image.url
         );
       }
-
-      alert("Story and images saved successfully!");
       setShowPopup(false);
+      setSuccessMessage("Your collection has been saved successfully!");
+      setTimeout(() => setSuccessMessage(""), 1000);
     } catch (error) {
       console.error("Error saving data:", error);
       alert("Failed to save the story and images.");
@@ -194,32 +204,34 @@ function CabinetAIPost() {
 
   return (
     <div className="App2">
-      <h2 className="heading">Your Story Preview</h2>
+      <h2 className="heading">Your Story</h2>
 
       {/* Display images */}
       <div className="image-grid">
+        <p className="subheading">Images in your collection</p>
         {images.map((img, index) => (
-          <img key={index} src={img.url} alt={img.name} className="story-image"  style={{width: '300px', height: '300px'}}/>
+          <img key={index} src={img.url} alt={img.name} className="story_image"/>
         ))}
       </div>
 
-      <p style={{color: '#ebe4d1'}}><strong>Story Name:</strong> {storyName}</p>
-      <p style={{color: '#ebe4d1'}}><strong>Genre:</strong> {genre}</p>
+      <p style={{color: '#ebe4d1', display: 'none'}}><strong>Genre:</strong> {genre}</p>
 
       {/* Generated story */}
-      <div className="story-output">
-        <h3>Generated Story</h3>
+      <div className="story_output">
+        <h3 className="story_ouput_heading">{storyName}</h3>
         <p>{narrative}</p>
       </div>
 
-      {/* Submit Button (triggers popup) */}
-      <button className="btn-save" onClick={() => setShowPopup(true)}>Submit</button>
+      <button className="btn_generate" onClick={generateStory} style={{ marginLeft: '10px' }}>
+      Generate Another Story
+    </button>
+      <button className="btn_save" onClick={() => setShowPopup(true)}>Create Collection</button>
 
       {/* Popup for collection name */}
       {showPopup && (
-        <div className="popup-overlay">
-          <div className="popup">
-            <h3>Enter Collection Name</h3>
+        <div className="welcome-modal">
+          <div className="modal_content">
+            <h3 className="save_heading">Want to save your images and story to view later, enter your collection name below to save it.</h3>
             <input
               type="text"
               value={collectionName}
@@ -227,24 +239,49 @@ function CabinetAIPost() {
               placeholder="e.g., MagicalRealismStories"
               className="popup-input"
             />
-            <button className="btn-save" onClick={handleSubmit}>Confirm Save</button>
-            <button className="btn-cancel" onClick={() => setShowPopup(false)}>Cancel</button>
+            <div style={{ marginTop: '20px' }}>
+              <button className="btn-save" onClick={handleSubmit}>Confirm Save</button>
+              <button className="btn-cancel" onClick={() => setShowPopup(false)} style={{ marginLeft: '10px' }}>
+                Cancel
+              </button>
+            </div>
           </div>
+        </div>
+      )}
+
+      {successMessage && (
+        <div className="success-banner">
+          {successMessage}
         </div>
       )}
 
       {/* AI Chat Section */}
       <h3 className="heading">Ask AI about your story:</h3>
+      <p className="instruction_text">
+        You can choose a category and select a question to ask about your story, or type your own custom question in the box below.
+      </p>
       <div className="chat-section">
-        <div className="chat-container">
-          {chatMessages.map((msg, idx) => (
-            <div
-              key={idx}
-              className={`chat-message ${msg.role === "user" ? "user" : "ai"}`}
-            >
-              {msg.content}
-            </div>
-          ))}
+        <div>
+          <select
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="dropdown"
+          >
+            <option value="">Pick a category...</option>
+            {Object.keys(questions).map((category, idx) => (
+              <option key={idx} value={category}>{category}</option>
+            ))}
+          </select>
+
+          <select
+            onChange={(e) => e.target.value && setUserMessage(e.target.value)}
+            className="dropdown2"
+          >
+            <option value="">Pick a question from category chosen above...</option>
+            {selectedCategory && questions[selectedCategory].map((question, idx) => (
+              <option key={idx} value={question}>{question}</option>
+            ))}
+            {!selectedCategory && <option value="" disabled>Please select a category first</option>}
+          </select>
         </div>
 
         <div className="chat-input-group">
@@ -258,26 +295,18 @@ function CabinetAIPost() {
           <button className="btn-send" onClick={handleChat}>Send</button>
         </div>
 
-        <select
-          onChange={(e) => setSelectedCategory(e.target.value)}
-          className="dropdown"
-        >
-          <option value="">Pick a category...</option>
-          {Object.keys(questions).map((category, idx) => (
-            <option key={idx} value={category}>{category}</option>
+        <div className="chat-container"  ref={chatContainerRef}>
+          {chatMessages.map((msg, idx) => (
+            <div
+              key={idx}
+              className={`chat-message ${msg.role === "user" ? "user" : "ai"}`}
+            >
+              {msg.content}
+            </div>
           ))}
-        </select>
+        </div>
 
-        <select
-          onChange={(e) => e.target.value && setUserMessage(e.target.value)}
-          className="dropdown"
-        >
-          <option value="">Pick a question...</option>
-          {selectedCategory && questions[selectedCategory].map((question, idx) => (
-            <option key={idx} value={question}>{question}</option>
-          ))}
-          {!selectedCategory && <option value="" disabled>Please select a category first</option>}
-        </select>
+        
       </div>
 
       <ScrollToTopButton />

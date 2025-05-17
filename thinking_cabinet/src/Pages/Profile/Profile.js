@@ -7,6 +7,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import ScrollToTopButton from '../../componements/ScrollToTopButton';
 import { getStoryText } from '../../services/DbService';
 
+
 function Profile() {
   const [image, setImage] = useState(null);
   const fileInputRef = useRef(null);
@@ -164,80 +165,95 @@ function Profile() {
       <h2 className='Heading_one'>Update Profile</h2>
 
       {/* Profile Picture Section */}
-      <div className="profile-picture-container">
-        <div
-          className="profile-picture"
-          style={{
-            backgroundImage: `url(${image ? URL.createObjectURL(image) : (profileImageUrl || 'placeholder-image.png')})`,
-          }}
-        />
-        <button className="upload-button" onClick={handleClick} disabled={uploading}>
-          {uploading ? 'Uploading...' : (image ? 'Change Image' : 'Upload')}
-        </button>
-        {image && (
-          <button className="save-button" onClick={handleUpload} disabled={uploading}>
-            {uploading ? 'Saving...' : 'Save Image'}
+      <div className='profile_container'>
+        <div className="profile-picture-container">
+          <div
+            className="profile-picture"
+            style={{
+              backgroundImage: `url(${image ? URL.createObjectURL(image) : (profileImageUrl || 'placeholder-image.png')})`,
+            }}
+          />
+          <button className="upload-button" onClick={handleClick} disabled={uploading}>
+            {uploading ? 'Uploading...' : (image ? 'Change Image' : 'Upload')}
           </button>
-        )}
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleImageChange}
-          style={{ display: 'none' }}
-          ref={fileInputRef}
-        />
+          {image && (
+            <button className="save-button" onClick={handleUpload} disabled={uploading}>
+              {uploading ? 'Saving...' : 'Save Image'}
+            </button>
+          )}
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            style={{ display: 'none' }}
+            ref={fileInputRef}
+          />
+        </div>
+
+        <div className="information">
+          <p>
+            <strong>Name:</strong> <br/>
+            {userData.displayName}
+          </p>
+          <p>
+            <strong>Email:</strong> <br/>
+            {userData.email}
+          </p>
+          <p>
+            <strong>Password:</strong> <br/>
+            {showPassword
+              ? ` ${userData.password}`
+              : ` ${'•'.repeat(userData.password.length || 0)}`
+            }
+            <button
+              onClick={() => setShowPassword(!showPassword)}
+              style={{ marginLeft: '10px', padding: '2px 6px', fontSize: '0.8em' }}
+            >
+              {showPassword ? 'Hide' : 'Show'}
+            </button>
+          </p>
+        </div>
       </div>
 
-      {/* User Information */}
-      <div style={{ marginLeft: '70px', marginTop: '20px', color: '#ebe4d1' }}>
-        <p><strong>Name:</strong> {userData.displayName}</p>
-        <p><strong>Email:</strong> {userData.email}</p>
-        <p>
-          <strong>Password:</strong>
-          {showPassword
-            ? ` ${userData.password}`
-            : ` ${'•'.repeat(userData.password.length || 0)}`
-          }
-          <button
-            onClick={() => setShowPassword(!showPassword)}
-            style={{ marginLeft: '10px', padding: '2px 6px', fontSize: '0.8em' }}
-          >
-            {showPassword ? 'Hide' : 'Show'}
-          </button>
-        </p>
-      </div>
+      <h2 className='Heading_two'>Cabinet</h2>
 
-      <h2 style={{ marginLeft: '70px', fontWeight: 'bold', color: '#ebe4d1', fontSize: '40pt' }}>Cabinet</h2>
+      <div className="collections-container">
+        {collectionsData.map(collection => (
+          <div className="collection-box" key={collection.id}>
+            <h3 className="collection-title">{collection.name}</h3>
 
-      <div style={{ marginLeft: '70px', color: '#ebe4d1' }}>
-      {collectionsData.map(collection => (
-        <div key={collection.id} style={{ marginBottom: '30px', padding: '15px', backgroundColor: '#5c7a68', borderRadius: '8px', maxWidth: '800px' }}>
-          <h3 style={{ color: '#ebe4d1', fontWeight: 'bold', marginBottom: '10px' }}>{collection.name}</h3>
-          {collection.story && collection.story.length > 0 && (
-            <div style={{ marginBottom: '15px', padding: '10px', backgroundColor: '#739072', borderRadius: '5px' }}>
-              <strong style={{ color: '#d1c0a3' }}>Story:</strong>
-              {collection.story.map((storyItem, index) => (
-                <p key={index} style={{ marginTop: '5px', fontStyle: 'italic', color: '#ebe4d1' }}>
-                  {storyItem.narrative || 'No story available'}
-                </p>
+            {collection.story && collection.story.length > 0 && (
+              <div className="story-box">
+                <strong className="story-label">Story:</strong>
+                {collection.story.map((storyItem, index) => (
+                  <p className="story-text" key={index}>
+                    {storyItem.narrative || 'No story available'}
+                  </p>
+                ))}
+              </div>
+            )}
+
+            <div className="images-grid">
+              {collection.images.map((img, index) => (
+                <div className="image-box" key={img.id || index}>
+                  <img
+                    src={img.imageUrl}
+                    alt={`Image ${index + 1}`}
+                    className="collection-image"
+                  />
+                </div>
               ))}
             </div>
-          )}
-          <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-            {collection.images.map((img, index) => (
-              <div key={img.id || index} style={{ margin: '10px', backgroundColor: '#739072', borderRadius: '8px', padding: '8px' }}>
-                <img
-                  src={img.imageUrl}
-                  alt={`Image ${index + 1}`}
-                  style={{ width: '150px', height: '150px', objectFit: 'cover', borderRadius: '8px' }}
-                />
-              </div>
-            ))}
+
+            {collection.images.length === 0 && (
+              <p className="no-images-text">No images in this collection.</p>
+            )}
           </div>
-          {collection.images.length === 0 && <p style={{ fontStyle: 'italic', color: '#d1c0a3' }}>No images in this collection.</p>}
-        </div>
-      ))}
-        {collectionsData.length === 0 && <p style={{ fontStyle: 'italic', color: '#d1c0a3' }}>Collections Loading....</p>}
+        ))}
+
+        {collectionsData.length === 0 && (
+          <p className="no-collections-text">Collections Loading....</p>
+        )}
       </div>
 
       <ScrollToTopButton />

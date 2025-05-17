@@ -180,3 +180,41 @@
 .footer_text {
     font-size: 16pt;
 }
+
+.image_box {
+  width: 120px;
+  flex-shrink: 0;
+}
+
+.image_inner_box {
+  background: #fffaf4;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 180px;
+  justify-content: space-between;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.object-image {
+  width: 100px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.rename-input {
+  width: 100%;
+  font-size: 12px;
+  text-align: center;
+  padding: 4px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fff;
+  box-sizing: border-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

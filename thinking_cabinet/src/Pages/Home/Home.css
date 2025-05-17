@@ -92,33 +92,32 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 0;
-    
-  }
+    z-index: 0;  
+}
   
-  .modal_content {
+.modal_content {
     background-color: #98A88D;
     padding: 4px;
     border-radius: 12px;
     text-align: center;
-    width: 600px;
-    height: 310px;
-  }
+    width: 900px;
+    height: 330px;
+}
   
-  .modal_content h2 {
+.modal_content h2 {
     margin-bottom: 0.5rem;
     color: #1B1D14;
     font-size: 50pt;
     font-weight: 700;
-  }
+}
 
-   .modal_content p {
+.modal_content p {
     margin-bottom: 20px;
     color: #1B1D14;
     font-size: 25pt;
-  }
+}
   
-  .modal_content button {
+.modal_content button {
     /* margin-top: 8px; */
     padding: 0.5rem 1rem;
     background-color: #565448;
@@ -127,9 +126,41 @@
     border-radius: 8px;
     cursor: pointer;
     font-size: 15pt;
-  }
+}
   
-  .modal_content button:hover {
+.modal_content button:hover {
     background-color: #D8D0BD;
     color: #1B1D14;
-  }
+}
+
+.collections-grid {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.collection-card {
+  background: #5c7a68;
+  padding: 15px;
+  border-radius: 8px;
+  width: 250px;
+  color: #ebe4d1;
+}
+
+.collection-card h3 {
+  margin: 0 0 8px 0;
+}
+
+.images-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.collection-image {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 6px;
+}

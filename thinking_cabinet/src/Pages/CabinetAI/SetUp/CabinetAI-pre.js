@@ -27,11 +27,7 @@ function CabinetAIPre() {
       const reader = new FileReader();
       reader.onloadend = () => {
         const imageUrl = reader.result;
-        let imageName = file.name;
-        const newName = prompt("Rename your image:", imageName);
-        if (newName !== null && newName.trim() !== "") {
-          imageName = newName.trim();
-        }
+        const imageName = file.name.split(".")[0]; // remove extension
         const newImage = { name: imageName, url: imageUrl };
         setTempImageList((prev) => [...prev, newImage]);
       };
@@ -80,21 +76,26 @@ function CabinetAIPre() {
 
         {/* Carousel Section */}
         <div className="carousel_box">
-          <div className="carousel" style={{ display: "flex", overflowX: "auto", padding: "20px 0" }}>
+          <div className="carousel" style={{ display: "flex", overflowX: "auto", padding: "20px 0", gap: "16px" }}>
             {tempImageList.map((img, index) => (
               <div className="image_box" key={index}>
-                <img
-                  src={img.url}
-                  alt={img.name}
-                  style={{
-                    width: "100px",
-                    height: "120px",
-                    objectFit: "cover",
-                    borderRadius: "12px",
-                    marginBottom: "16px",
-                  }}
-                />
-                <div style={{ fontSize: "14px", fontWeight: "500", textAlign: 'center' }}>{img.name.split(".")[0]}</div>
+                <div className="image_inner_box">
+                  <img
+                    src={img.url}
+                    alt={img.name}
+                    className="object-image"
+                  />
+                  <input
+                    type="text"
+                    value={img.name}
+                    onChange={(e) => {
+                      const updatedImages = [...tempImageList];
+                      updatedImages[index].name = e.target.value;
+                      setTempImageList(updatedImages);
+                    }}
+                    className="rename-input"
+                  />
+                </div>
               </div>
             ))}
           </div>
