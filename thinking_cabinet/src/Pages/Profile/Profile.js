@@ -215,7 +215,7 @@ function Profile() {
         </div>
       </div>
 
-      <h2 className='Heading_two'>Cabinet</h2>
+      <h2 className='Heading_two'> My Cabinets</h2>
 
       <div className="collections-container">
         {collectionsData.map(collection => (
@@ -224,7 +224,7 @@ function Profile() {
 
             {collection.story && collection.story.length > 0 && (
               <div className="story-box">
-                <strong className="story-label">Story:</strong>
+                <strong className="story-label">{collection.story.title}</strong>
                 {collection.story.map((storyItem, index) => (
                   <p className="story-text" key={index}>
                     {storyItem.narrative || 'No story available'}
