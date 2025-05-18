@@ -3,268 +3,341 @@ import "./Profile.css";
 import { auth, storage, db } from '../../firebase';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { doc, updateDoc, getDoc, collection, getDocs } from 'firebase/firestore';
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged, updatePassword } from 'firebase/auth';
 import ScrollToTopButton from '../../componements/ScrollToTopButton';
 import { getStoryText } from '../../services/DbService';
 
-
 function Profile() {
-  const [image, setImage] = useState(null);
-  const fileInputRef = useRef(null);
-  const [user, setUser] = useState('');
-  const [uploading, setUploading] = useState(false);
-  const [userData, setUserData] = useState({ displayName: '', email: '', password: '' });
-  const [profileImageUrl, setProfileImageUrl] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [collectionsData, setCollectionsData] = useState([]);
+    const [image, setImage] = useState(null);
+    const fileInputRef = useRef(null);
+    const [user, setUser] = useState('');
+    const [uploading, setUploading] = useState(false);
+    const [userData, setUserData] = useState({ displayName: '', email: '', password: '' });
+    const [profileImageUrl, setProfileImageUrl] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const [collectionsData, setCollectionsData] = useState([]);
+    const [newPassword, setNewPassword] = useState('');
+    const [isEditingPassword, setIsEditingPassword] = useState(false);
+    const [passwordUpdateError, setPasswordUpdateError] = useState('');
+    const [passwordUpdateSuccess, setPasswordUpdateSuccess] = useState('');
 
-  // Load user data
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (authUser) => {
-      if (authUser) {
-        setUser(authUser);
-        const userDocRef = doc(db, 'users', authUser.uid);
-        const userDocSnap = await getDoc(userDocRef);
-
-        if (userDocSnap.exists()) {
-          const data = userDocSnap.data();
-          setUserData({
-            displayName: data.displayName || authUser.displayName || 'No name set',
-            email: authUser.email,
-            password: data.password || '',
-          });
-          setProfileImageUrl(data.profileImageUrl || '');
-        } else {
-          setUserData({
-            displayName: authUser.displayName || 'No name set',
-            email: authUser.email,
-            password: '',
-          });
-        }
-      } else {
-        setUser(null);
-        setUserData({ displayName: '', email: '', password: '' });
-        setProfileImageUrl('');
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  // Load user collections with images and story
-  useEffect(() => {
-    const fetchUserCollectionsData = async () => {
-      if (!user) {
-        setCollectionsData([]); // Ensure collectionsData is empty if no user
-        console.log('No user logged in, skipping collection fetch.');
-        return;
-      }
-      console.log('Fetching collections for user:', user.uid);
-      try {
-        const collectionsRef = collection(db, 'users', user.uid, 'collections');
-        const snapshot = await getDocs(collectionsRef);
-        console.log('Collections snapshot:', snapshot);
-        const allCollectionsData = [];
-
-        console.log('...')
-        console.log(snapshot.size)
-        snapshot.forEach((doc) => {
-          console.log(doc.id, " => ", doc.data());
-        });
-
-        console.log('...')
-
-        for (const collectionDoc of snapshot.docs) {
-          const collectionId = collectionDoc.id;
-          const collectionName = collectionDoc.data().collectionName || collectionId;
-          console.log('Processing collection:', collectionId, 'Name:', collectionName);
-
-          const imagesRef = collection(db, 'users', user.uid, 'collections', collectionId, 'images');
-          const imagesSnapshot = await getDocs(imagesRef);
-          const collectionImages = imagesSnapshot.docs
-            .filter(doc => doc.id !== 'story')
-            .map(doc => ({
-              id: doc.id,
-              imageUrl: doc.data().url,
-            }));
-          console.log('Images for collection', collectionId, ':', collectionImages);
-
-          const storyRef = collection(db, 'users', user.uid, 'collections', collectionId, 'stories');
-          const storySnapshot = await getDocs(storyRef);
-
-          // Extract story data, accessing the narrative correctly
-          const collectionStories = storySnapshot.docs
-            .map(doc => ({
-              id: doc.id,
-              narrative: doc.data()?.story?.narrative || 'No story available', // Access nested narrative
-            }));
-
-          console.log('Stories for collection', collectionId, ':', collectionStories);
-
-
-          allCollectionsData.push({
-            id: collectionId,
-            name: collectionName,
-            images: collectionImages,
-            story: collectionStories,
-          });
-        }
-        setCollectionsData(allCollectionsData);
-        console.log('Fetched collections data:', allCollectionsData);
-      } catch (error) {
-        console.error('Error fetching collections data:', error);
-        setCollectionsData([]); // Handle potential errors by setting to empty
-      }
+    const handleNewPasswordChange = (event) => {
+        setNewPassword(event.target.value);
     };
 
-    fetchUserCollectionsData();
-  }, [user]);
+    const handleEditPasswordClick = () => {
+        setIsEditingPassword(true);
+        setPasswordUpdateError('');
+        setPasswordUpdateSuccess('');
+    };
 
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setImage(file);
-    }
-  };
+    const handleSavePasswordClick = async () => {
+        if (!user) {
+            setPasswordUpdateError('No user logged in.');
+            return;
+        }
+        if (newPassword.length < 6) {
+            setPasswordUpdateError('Password must be at least 6 characters long.');
+            return;
+        }
 
-  const handleClick = () => {
-    fileInputRef.current.click();
-  };
+        try {
+            await updatePassword(user, newPassword);
+            // Optionally, update the password in Firestore as well
+            const userDocRef = doc(db, 'users', user.uid);
+            await updateDoc(userDocRef, {
+                password: newPassword,
+            });
+            setPasswordUpdateSuccess('Password updated successfully!');
+            setIsEditingPassword(false);
+            setNewPassword('');
+        } catch (error) {
+            console.error('Error updating password:', error);
+            setPasswordUpdateError(error.message);
+        }
+    };
 
-  const handleUpload = async () => {
-    if (!image || !user) {
-      console.error("No image selected or user not logged in.");
-      return;
-    }
+    const handleCancelPasswordEdit = () => {
+        setIsEditingPassword(false);
+        setNewPassword('');
+        setPasswordUpdateError('');
+        setPasswordUpdateSuccess('');
+    };
 
-    setUploading(true);
-    const imageRef = ref(storage, `users/${user.uid}/profileImage`);
+    // Load user data
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, async (authUser) => {
+            if (authUser) {
+                setUser(authUser);
+                const userDocRef = doc(db, 'users', authUser.uid);
+                const userDocSnap = await getDoc(userDocRef);
 
-    try {
-      const snapshot = await uploadBytes(imageRef, image);
-      const downloadURL = await getDownloadURL(snapshot.ref);
-
-      const userDocRef = doc(db, 'users', user.uid);
-      await updateDoc(userDocRef, {
-        profileImageUrl: downloadURL,
-      });
-
-      setProfileImageUrl(downloadURL);
-      setImage(null);
-      alert("Profile image updated successfully!");
-    } catch (error) {
-      console.error("Error uploading image:", error);
-      alert("Failed to upload profile image.");
-    } finally {
-      setUploading(false);
-    }
-  };
-
-  return (
-    <div className="App2">
-      <h2 className='Heading_one'>Update Profile</h2>
-
-      {/* Profile Picture Section */}
-      <div className='profile_container'>
-        <div className="profile-picture-container">
-          <div
-            className="profile-picture"
-            style={{
-              backgroundImage: `url(${image ? URL.createObjectURL(image) : (profileImageUrl || 'placeholder-image.png')})`,
-            }}
-          />
-          <button className="upload-button" onClick={handleClick} disabled={uploading}>
-            {uploading ? 'Uploading...' : (image ? 'Change Image' : 'Upload')}
-          </button>
-          {image && (
-            <button className="save-button" onClick={handleUpload} disabled={uploading}>
-              {uploading ? 'Saving...' : 'Save Image'}
-            </button>
-          )}
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-            style={{ display: 'none' }}
-            ref={fileInputRef}
-          />
-        </div>
-
-        <div className="information">
-          <p>
-            <strong>Name:</strong> <br/>
-            {userData.displayName}
-          </p>
-          <p>
-            <strong>Email:</strong> <br/>
-            {userData.email}
-          </p>
-          <p>
-            <strong>Password:</strong> <br/>
-            {showPassword
-              ? ` ${userData.password}`
-              : ` ${'•'.repeat(userData.password.length || 0)}`
+                if (userDocSnap.exists()) {
+                    const data = userDocSnap.data();
+                    setUserData({
+                        displayName: data.displayName || authUser.displayName || 'No name set',
+                        email: authUser.email,
+                        password: data.password || '',
+                    });
+                    setProfileImageUrl(data.profileImageUrl || '');
+                } else {
+                    setUserData({
+                        displayName: authUser.displayName || 'No name set',
+                        email: authUser.email,
+                        password: '',
+                    });
+                }
+            } else {
+                setUser(null);
+                setUserData({ displayName: '', email: '', password: '' });
+                setProfileImageUrl('');
             }
-            <button
-              onClick={() => setShowPassword(!showPassword)}
-              style={{ marginLeft: '10px', padding: '2px 6px', fontSize: '0.8em' }}
-            >
-              {showPassword ? 'Hide' : 'Show'}
-            </button>
-          </p>
-        </div>
-      </div>
+        });
 
-      <h2 className='Heading_two'> My Cabinets</h2>
+        return () => unsubscribe();
+    }, []);
 
-      <div className="collections-container">
-        {collectionsData.map(collection => (
-          <div className="collection-box" key={collection.id}>
-            <h3 className="collection-title">{collection.name}</h3>
+    // Load user collections with images and story
+    useEffect(() => {
+        const fetchUserCollectionsData = async () => {
+            if (!user) {
+                setCollectionsData([]); // Ensure collectionsData is empty if no user
+                console.log('No user logged in, skipping collection fetch.');
+                return;
+            }
+            console.log('Fetching collections for user:', user.uid);
+            try {
+                const collectionsRef = collection(db, 'users', user.uid, 'collections');
+                const snapshot = await getDocs(collectionsRef);
+                console.log('Collections snapshot:', snapshot);
+                const allCollectionsData = [];
 
-            {collection.story && collection.story.length > 0 && (
-              <div className="story-box">
-                <strong className="story-label">{collection.story.title}</strong>
-                {collection.story.map((storyItem, index) => (
-                  <p className="story-text" key={index}>
-                    {storyItem.narrative || 'No story available'}
-                  </p>
-                ))}
-              </div>
-            )}
+                console.log('...')
+                console.log(snapshot.size)
+                snapshot.forEach((doc) => {
+                    console.log(doc.id, " => ", doc.data());
+                });
 
-            <div className="images-grid">
-              {collection.images.map((img, index) => (
-                <div className="image-box" key={img.id || index}>
-                  <img
-                    src={img.imageUrl}
-                    alt={`Image ${index + 1}`}
-                    className="collection-image"
-                  />
+                console.log('...')
+
+                for (const collectionDoc of snapshot.docs) {
+                    const collectionId = collectionDoc.id;
+                    const collectionName = collectionDoc.data().collectionName || collectionId;
+                    console.log('Processing collection:', collectionId, 'Name:', collectionName);
+
+                    const imagesRef = collection(db, 'users', user.uid, 'collections', collectionId, 'images');
+                    const imagesSnapshot = await getDocs(imagesRef);
+                    const collectionImages = imagesSnapshot.docs
+                        .filter(doc => doc.id !== 'story')
+                        .map(doc => ({
+                            id: doc.id,
+                            imageUrl: doc.data().url,
+                        }));
+                    console.log('Images for collection', collectionId, ':', collectionImages);
+
+                    const storyRef = collection(db, 'users', user.uid, 'collections', collectionId, 'stories');
+                    const storySnapshot = await getDocs(storyRef);
+
+                    // Extract story data, accessing the title and narrative
+                    const collectionStories = storySnapshot.docs
+                        .map(doc => ({
+                            id: doc.id,
+                            title: doc.data()?.story?.title || 'Untitled Story', // Access nested title
+                            narrative: doc.data()?.story?.narrative || 'No story available', // Access nested narrative
+                        }));
+
+                    console.log('Stories for collection', collectionId, ':', collectionStories);
+
+
+                    allCollectionsData.push({
+                        id: collectionId,
+                        name: collectionName,
+                        images: collectionImages,
+                        story: collectionStories,
+                    });
+                }
+                setCollectionsData(allCollectionsData);
+                console.log('Fetched collections data:', allCollectionsData);
+            } catch (error) {
+                console.error('Error fetching collections data:', error);
+                setCollectionsData([]); // Handle potential errors by setting to empty
+            }
+        };
+
+        fetchUserCollectionsData();
+    }, [user]);
+
+    const handleImageChange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            setImage(file);
+        }
+    };
+
+    const handleClick = () => {
+        fileInputRef.current.click();
+    };
+
+    const handleUpload = async () => {
+        if (!image || !user) {
+            console.error("No image selected or user not logged in.");
+            return;
+        }
+
+        setUploading(true);
+        const imageRef = ref(storage, `users/${user.uid}/profileImage`);
+
+        try {
+            const snapshot = await uploadBytes(imageRef, image);
+            const downloadURL = await getDownloadURL(snapshot.ref);
+
+            const userDocRef = doc(db, 'users', user.uid);
+            await updateDoc(userDocRef, {
+                profileImageUrl: downloadURL,
+            });
+
+            setProfileImageUrl(downloadURL);
+            setImage(null);
+            alert("Profile image updated successfully!");
+        } catch (error) {
+            console.error("Error uploading image:", error);
+            alert("Failed to upload profile image.");
+        } finally {
+            setUploading(false);
+        }
+    };
+
+    return (
+        <div className="App2">
+            <h2 className='Heading_one'>Update Profile</h2>
+
+            {/* Profile Picture Section */}
+            <div className='profile_container'>
+                <div className="profile-picture-container">
+                    <div
+                        className="profile-picture"
+                        style={{
+                            backgroundImage: `url(${image ? URL.createObjectURL(image) : (profileImageUrl || 'placeholder-image.png')})`,
+                        }}
+                    />
+                    <button className="upload-button" onClick={handleClick} disabled={uploading}>
+                        {uploading ? 'Uploading...' : (image ? 'Change Image' : 'Upload')}
+                    </button>
+                    {image && (
+                        <button className="save-button" onClick={handleUpload} disabled={uploading}>
+                            {uploading ? 'Saving...' : 'Save Image'}
+                        </button>
+                    )}
+                    <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        style={{ display: 'none' }}
+                        ref={fileInputRef}
+                    />
                 </div>
-              ))}
+
+                <div className="information">
+                    <p>
+                        <strong>Name:</strong> <br/>
+                        {userData.displayName}
+                    </p>
+                    <p>
+                        <strong>Email:</strong> <br/>
+                        {userData.email}
+                    </p>
+                    <p>
+                        <strong>Password:</strong> <br/>
+                        {!isEditingPassword ? (
+                            <>
+                                {showPassword
+                                    ? ` ${userData.password}`
+                                    : ` ${'•'.repeat(userData.password.length || 0)}`
+                                }
+                                <button
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    style={{ marginLeft: '10px', padding: '2px 6px', fontSize: '0.8em' }}
+                                >
+                                    {showPassword ? 'Hide' : 'Show'}
+                                </button>
+                                <button
+                                    onClick={handleEditPasswordClick}
+                                    style={{ marginLeft: '10px', padding: '2px 6px', fontSize: '0.8em' }}
+                                >
+                                    Edit
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                <input
+                                    type="password"
+                                    placeholder="New Password"
+                                    value={newPassword}
+                                    onChange={handleNewPasswordChange}
+                                    className="new-password-input"
+                                />
+                                <button onClick={handleSavePasswordClick} className="save-password-button">Save</button>
+                                <button onClick={handleCancelPasswordEdit} className="cancel-password-button">Cancel</button>
+                            </>
+                        )}
+                    </p>
+                    {passwordUpdateError && <p className="error-message">{passwordUpdateError}</p>}
+                    {passwordUpdateSuccess && <p className="success-message">{passwordUpdateSuccess}</p>}
+                </div>
             </div>
 
-            {collection.images.length === 0 && (
-              <p className="no-images-text">No images in this collection.</p>
-            )}
-          </div>
-        ))}
+            <h2 className='Heading_two'> My Cabinets</h2>
 
-        {collectionsData.length === 0 && (
-          <p className="no-collections-text">Collections Loading....</p>
-        )}
-      </div>
+            <div className="collections-container">
+                {collectionsData.map(collection => (
+                    <div className="collection-box" key={collection.id}>
+                        <h3 className="collection-title">{collection.name}</h3>
 
-      <ScrollToTopButton />
+                        {collection.story && collection.story.length > 0 && (
+                            <div className="story-box">
+                                {collection.story.map((storyItem, index) => (
+                                    <div key={index} className="single-story">
+                                        <strong className="story-title">{storyItem.title}</strong>
+                                        <p className="story-text">
+                                            {storyItem.narrative || 'No story available'}
+                                        </p>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
 
-      <footer>
-        <div className="footer">
-          <h6 className="footer_text">Copyright © 2025 The Thinking Cabinet. All rights reserved.</h6>
+                        <div className="images-grid">
+                            {collection.images.map((img, index) => (
+                                <div className="image-box" key={img.id || index}>
+                                    <img
+                                        src={img.imageUrl}
+                                        alt={`Image ${index + 1}`}
+                                        className="collection-image"
+                                    />
+                                </div>
+                            ))}
+                        </div>
+
+                        {collection.images.length === 0 && (
+                            <p className="no-images-text">No images in this collection.</p>
+                        )}
+                    </div>
+                ))}
+
+                {collectionsData.length === 0 && (
+                    <p className="no-collections-text">Collections Loading....</p>
+                )}
+            </div>
+
+            <ScrollToTopButton />
+
+            <footer>
+                <div className="footer">
+                    <h6 className="footer_text">Copyright © 2025 The Thinking Cabinet. All rights reserved.</h6>
+                </div>
+            </footer>
         </div>
-      </footer>
-    </div>
-  );
+    );
 }
 
 export default Profile;
