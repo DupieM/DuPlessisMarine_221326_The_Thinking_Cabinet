@@ -102,7 +102,7 @@
 }
 
 .Stn {
-    background-color: #AEC0CC;
+    background-color: #20644d63;
     width: 740px;
     height: 230px;
     margin-top: 40px;
@@ -115,10 +115,17 @@
     margin-left: 420px;
 }
 
+.Stn h2 {
+    font-size: 35pt;
+    line-height: 50px;
+    font-weight: 600;
+    color: #AEC0CC;
+}
+
 .Stn2 {
-    background-color: #AEC0CC;
+    background-color: #20644d63;
     width: 740px;
-    height: 180px;
+    height: 240px;
     margin-top: 40px;
     margin-bottom: 80px;
     padding-top: 20px;
@@ -129,11 +136,11 @@
     margin-left: 420px;
 }
 
-.subheading{
+.Stn2 h2 {
     font-size: 35pt;
     line-height: 50px;
     font-weight: 600;
-    color: #2d362f;
+    color: #AEC0CC;
 }
 
 .input {

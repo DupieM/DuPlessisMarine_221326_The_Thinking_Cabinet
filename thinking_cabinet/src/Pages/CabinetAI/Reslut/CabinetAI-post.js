@@ -76,6 +76,10 @@ function CabinetAIPost() {
 
   const [selectedCategory, setSelectedCategory] = useState("");
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   // Auto-generate story on page load
   useEffect(() => {
     generateStory();
@@ -195,7 +199,7 @@ function CabinetAIPost() {
       }
       setShowPopup(false);
       setSuccessMessage("Your collection has been saved successfully!");
-      setTimeout(() => setSuccessMessage(""), 1000);
+      setTimeout(() => setSuccessMessage(""), 2000);
     } catch (error) {
       console.error("Error saving data:", error);
       alert("Failed to save the story and images.");
@@ -222,16 +226,17 @@ function CabinetAIPost() {
         <p>{narrative}</p>
       </div>
 
-      <button className="btn_generate" onClick={generateStory} style={{ marginLeft: '10px' }}>
-      Generate Another Story
-    </button>
       <button className="btn_save" onClick={() => setShowPopup(true)}>Create Collection</button>
+      <button className="btn_generate" onClick={generateStory} style={{ marginLeft: '10px' }}>
+        Generate Another Story
+      </button>
+      
 
       {/* Popup for collection name */}
       {showPopup && (
         <div className="welcome-modal">
           <div className="modal_content">
-            <h3 className="save_heading">Want to save your images and story to view later, enter your collection name below to save it.</h3>
+            <h3 className="save_heading">Save your images and story to view later, enter your collection name below to save it.</h3>
             <input
               type="text"
               value={collectionName}
@@ -240,7 +245,7 @@ function CabinetAIPost() {
               className="popup-input"
             />
             <div style={{ marginTop: '20px' }}>
-              <button className="btn-save" onClick={handleSubmit}>Confirm Save</button>
+              <button className="btn-save" onClick={handleSubmit}>Confirm</button>
               <button className="btn-cancel" onClick={() => setShowPopup(false)} style={{ marginLeft: '10px' }}>
                 Cancel
               </button>
@@ -299,7 +304,7 @@ function CabinetAIPost() {
           {chatMessages.map((msg, idx) => (
             <div
               key={idx}
-              className={`chat-message ${msg.role === "user" ? "user" : "ai"}`}
+              className={msg.role === "user" ? "user-message" : "ai-message"}
             >
               {msg.content}
             </div>

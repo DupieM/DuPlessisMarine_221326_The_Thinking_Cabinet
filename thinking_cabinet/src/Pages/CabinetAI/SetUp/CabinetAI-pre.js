@@ -49,13 +49,18 @@ function CabinetAIPre() {
       <div>
         <p className="Box">
           CabinetAI allows you to bring objects to life through AI-generated stories.
-          Simply upload a picture of an object, watch as AI creates a unique narrative,
+          Simply upload a pictures of objects, watch as AI creates a unique narrative,
           and save it under a collection name. You can also chat with AI to explore deeper
           meanings, ask questions, or gain new insights about your object.
         </p>
       </div>
 
       <h2 className="heading">Your Wunderkammer Objects</h2>
+
+      <p style={{color: '#ebe4d1', fontSize: '15pt', fontStyle: 'italic'}}>
+        Please note we strongly recommend that you rename your images to get the best story generated. <br/>
+        You can do this by clicking in name box below each image
+      </p>
 
       <div className="container_box">
         <div className="upload-container">
@@ -103,7 +108,7 @@ function CabinetAIPre() {
       </div>
 
       <div className="Stn">
-        <h3 className="subheading">What would you like the story to be called?</h3>
+        <h2>What would you like the story to be called?</h2>
         <input
           className="input"
           type="text"
@@ -114,7 +119,7 @@ function CabinetAIPre() {
       </div>
 
       <div className="Stn2">
-        <h3 className="subheading">What genre is your story?</h3>
+        <h2>In which genre should your story be created?</h2>
         <select
           className="dropdown"
           value={genre}

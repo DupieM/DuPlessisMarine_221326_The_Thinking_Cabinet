@@ -14,7 +14,7 @@
 }
 
 .btn_save {
-  background-color: #565448;
+  background-color: #D8D0BD;
   font-size: 18pt;
   font-weight: 600;
   padding-top: 8px;
@@ -22,11 +22,16 @@
   padding-left: 50px;
   padding-right: 50px;
   text-decoration: none;
-  color: #D8D0BD;
+  color: #565448;
   border-radius: 70px;
   margin-left: 20px;
   cursor: pointer;
   border: 0;
+}
+
+.btn_save:hover {
+  background-color: #565448;
+  color: #D8D0BD;
 }
 
 .btn_generate {
@@ -39,6 +44,8 @@
   border-radius: 4px;
   font-size: 18pt;
   border-radius: 70px;
+  font-style: italic;
+  margin-left: 20px;
 }
 
 .btn-send {
@@ -52,7 +59,6 @@
 }
 
 .btn_generate:hover,
-.btn_save:hover,
 .btn-send:hover {
   background-color: #D8D0BD;
   color: #565448;
@@ -146,11 +152,31 @@
   overflow-y: auto;
 }
 
-.chat-message {
-  padding: 10px;
-  border-radius: 8px;
+.ai-message {
+  width: 900px;
+  font-size: 15pt;
+  color: #203023;
+  background-color: #D8D0BD;
+  padding: 12px;
+  border-radius: 12px;
+  margin: 8px 0;
+  line-height: 1.5;
+  text-align: left;
+  margin-bottom: 40px;
+}
+
+.user-message {
+  width: 650px;
+  font-size: 18pt;
+  color: #D8D0BD;
+  background-color: #565448;
+  padding: 8px;
+  border-radius: 12px;
+  margin: 8px 0;
+  align-self: flex-end;
+  text-align: right;
   margin-bottom: 10px;
-  max-width: 70%;
+  margin-left: 605px;
 }
 
 .chat-message.user {
@@ -184,7 +210,7 @@
 }
 
 .modal_content {
-  background-color: #fffaf4;
+  background-color: #98A88D;
   padding: 30px;
   border-radius: 12px;
   width: 90%;
@@ -212,13 +238,33 @@
 }
 
 .btn-save {
-  background-color: #73a942;
-  color: white;
+  margin-top: 8px;
+  padding: 0.5rem 1rem;
+  background-color: #565448;
+  color: #ebdebf;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15pt;
+  width: 100px;
+}
+
+.btn-save:hover {
+  background-color: #ebdebf;
+  color: #565448;
 }
 
 .btn-cancel {
-  background-color: #ccc;
-  color: #333;
+  border: 0px;
+  font-size: 15pt;
+  border-radius: 6px;
+  background-color: #D8D0BD;
+  color: #38362c;
+}
+
+.btn-cancel:hover {
+  background-color: #38362c;
+  color: #D8D0BD;
 }
 
 .success-banner {
