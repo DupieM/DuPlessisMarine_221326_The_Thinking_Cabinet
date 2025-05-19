@@ -135,3 +135,71 @@
   color: #d1c0a3;
 }
 
+.hide-password-button {
+  margin-right: 15px;
+  margin-left: 20px;
+  border: 0px;
+  font-size: 15pt;
+  border-radius: 6px;
+  background-color: #565448;
+  color: #D8D0BD;
+}
+
+.hide-password-button:hover {
+  background-color: #D8D0BD;
+  color: #565448;
+}
+
+.edit-password-button {
+  border: 0px;
+  font-size: 15pt;
+  border-radius: 6px;
+  background-color: #D8D0BD;
+  color: #38362c;
+}
+
+.edit-password-button:hover {
+  background-color: #38362c;
+  color: #D8D0BD;
+}
+
+.new-password-input {
+  background-color: #70826745;
+  border: 0px;
+  margin-right: 20px;
+  border-radius: 7px;
+  padding-left: 8px;
+  font-size: 18pt;
+  color: #D8D0BD;
+}
+
+.new-password-input::placeholder {
+  color: #D8D0BD;
+}
+
+.save-password-button {
+  margin-right: 15px;
+  border: 0px;
+  font-size: 15pt;
+  border-radius: 6px;
+  background-color: #565448;
+  color: #D8D0BD;
+}
+
+.save-password-button:hover {
+  background-color: #D8D0BD;
+  color: #565448;
+}
+
+.cancel-password-button {
+  border: 0px;
+  font-size: 15pt;
+  border-radius: 6px;
+  background-color: #D8D0BD;
+  color: #38362c;
+}
+
+.cancel-password-button:hover {
+  background-color: #38362c;
+  color: #D8D0BD;
+}

@@ -256,13 +256,13 @@ function Profile() {
                                 }
                                 <button
                                     onClick={() => setShowPassword(!showPassword)}
-                                    style={{ marginLeft: '10px', padding: '2px 6px', fontSize: '0.8em' }}
+                                    className="hide-password-button"
                                 >
                                     {showPassword ? 'Hide' : 'Show'}
                                 </button>
                                 <button
                                     onClick={handleEditPasswordClick}
-                                    style={{ marginLeft: '10px', padding: '2px 6px', fontSize: '0.8em' }}
+                                    className="edit-password-button"
                                 >
                                     Edit
                                 </button>
