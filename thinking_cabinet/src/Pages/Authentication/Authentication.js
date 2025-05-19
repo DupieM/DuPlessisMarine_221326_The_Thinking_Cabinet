@@ -132,12 +132,9 @@ function Authentications() {
               required
             />
             {isSignUp && password && (
-              <p style={{ color: "black", marginTop: "5px" }}>
+              <p style={{ color: "red", marginTop: "5px" }}>
                 Password needs to be 6 characters long.
               </p>
-            )}
-            {passwordError && (
-              <p className="error-message">{passwordError}</p>
             )}
           </div>
 
