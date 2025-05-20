@@ -92,7 +92,7 @@ Clone the project repository as follow:
 
 1. Go to Github Desktop and then click on clone new repository
 
-2. Enter `https://github.com/DupieM/duplessismarine_221326_carbontrack.git` into the URL field and press the `Clone` button.
+2. Enter `https://github.com/DupieM/DuPlessisMarine_221326_The_Thinking_Cabinet.git` into the URL field and press the `Clone` button.
 
 To start the Expo app and install dependancies on laptop:
 
