@@ -45,3 +45,5 @@ await loginUser(email, password);
 // catch (err) {
 //   setGeneralError("Incorrect email or password."); // same message for both email and password errors
 // }
+
+target="_blank"

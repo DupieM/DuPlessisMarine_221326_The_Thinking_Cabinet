@@ -66,7 +66,7 @@
 
 ### Project Description
 
-??
+The Thinking Cabinet is an interactive digital platform that fosters reflective thinking and self-exploration. Users can upload meaningful object images, engage with AI to explore their significance, and generate thought-provoking responses. Alternatively, they can select predefined objects to instantly create stories or explore categorized themes through AI-driven conversations for inspiration, reflection, or curiosity.
 
 ### Built With
 
@@ -83,12 +83,49 @@ The following instructions will get you a copy of the project up and running on 
 
 ### Prerequisites
 
-???
+Ensure that you have the latest version of [Expo](https://docs.expo.dev/get-started/create-a-project/) installed on your machine. The Expo app for a mobile phone will also be required.
 
 ### How to install
 
 ### Installation
-????
+Clone the project repository as follow:
+
+1. Go to Github Desktop and then click on clone new repository
+
+2. Enter `https://github.com/DupieM/duplessismarine_221326_carbontrack.git` into the URL field and press the `Clone` button.
+
+To start the Expo app and install dependancies on laptop:
+
+1. Go to Visual Studio code  </br>
+   Open your Visual Studio code then click on File and then click on Open folder.
+    Then navigate to where you have cloned the repository and open it.
+
+2. Start terminal </br>
+   Go to `Terminal` then click on new terminal.
+
+3. Install dependencies </br>
+   Enter `npm install` to get all the dependencies
+
+4. Install latest Expo version </br>
+   Enter `npm install expo@latest` to get latest version
+
+5. Create your own .env file </br>
+    Depending on the AI technology you are using (Google/OpenAi) add your `Private Keys` that you generated on either technology to this file.
+
+6. Start the Expo server </br>
+   Enter `npm start` to start Expo
+
+To start the Expo app on a phone:
+
+1. Go to Google play store or Apple play store  </br>
+   Open your plays tore and type in search field `Expo Go`.
+   Click on the Expo Go app and then install it.
+
+2. Open Expo Go app </br>
+   After opening the app click on QR code and scan the QR code in the terminal of the app on Visual Studio
+
+3. Start experimenting with the mobile application
+
 
 <!-- FEATURES AND FUNCTIONALITY-->
 <!-- You can add the links to all of your imagery at the bottom of the file as references -->
@@ -123,14 +160,6 @@ The following instructions will get you a copy of the project up and running on 
 
 ??
 
-</br>
-
-![Wunderchat]()
-
-### Wunderchat Page
-
-??
-
 
 <!-- CONCEPT PROCESS -->
 <!-- Briefly explain your concept ideation process -->
@@ -140,9 +169,9 @@ The `Conceptual Process` is the set of actions, activities and research that was
 
 ### Ideation
 
-<img src="" alt="Visual Mind Map" width="1000px">
+<img src="readme_images/Visual_Mind_Map.jpg" alt="Visual Mind Map" width="1000px">
 </br>
-<img src="" alt="Moodboard" width="1000px">
+<img src="readme_images/moodboard.jpg" alt="Moodboard" width="1000px">
 
 ### Wireframes
 
@@ -161,13 +190,14 @@ The `Conceptual Process` is the set of actions, activities and research that was
 
 ### User-flow
 
-<img src="" alt="user Flow" width="1000px">
+<img src="readme_images/User_Flow.png" alt="user Flow" width="1000px">
 
-### ER-Diagram
+### Schema Diagram
 
-<img src="" alt="" width="1000px">
+<img src="" alt="schema diagram" width="1000px">
 
 <!-- DEVELOPMENT PROCESS -->
+
 ## Development Process
 
 The `Development Process` is the technical implementations and functionality done in the frontend and backend of the application.
@@ -226,7 +256,7 @@ The `Development Process` is the technical implementations and functionality don
 ![Mockup 6]()
 <br>
 
-!-- VIDEO DEMONSTRATION -->
+<!-- VIDEO DEMONSTRATION -->
 ### Video Demonstration
 
 To see a run through of the application, click below:
