@@ -112,6 +112,7 @@ function Home() {
                             onMouseEnter={handleWunderkammerHover}
                             onMouseLeave={handleWunderkammerMouseLeave}
                             style={{ position: 'relative', display: 'inline-block' }}
+                            target="_blank"
                         >
                             <a href="https://en.wikipedia.org/wiki/Cabinet_of_curiosities" className="link"> Wunderkammer </a>
                             {isWunderkammerHovered && (

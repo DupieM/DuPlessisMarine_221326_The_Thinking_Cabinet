@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { signUpUser, loginUser } from "../../services/authService";
 import { useNavigate } from "react-router-dom";
 import './Authentication.css';
-import plantImage from '../../assets/plant.jpg';
+import cabinetImage from '../../assets/Cabinet.png';
 import bcrypt from 'bcryptjs'; // ✅ only if you're manually storing passwords (NOT Firebase Auth)
 
 function Authentications() {
@@ -50,10 +50,7 @@ function Authentications() {
 
     try {
       if (isSignUp) {
-        // ✅ Hash password (ONLY if storing in Firestore, NOT Firebase Auth)
-        const salt = bcrypt.genSaltSync(10);
-        const hashedPassword = bcrypt.hashSync(password, salt);
-        await signUpUser(name, email, hashedPassword);
+        await signUpUser(name, email, password);
       } else {
         await loginUser(email, password); // raw password for login comparison
       }
@@ -83,7 +80,7 @@ function Authentications() {
     <div className="authentication-container">
       <div className={`image-container ${isSignUp ? "normal" : "right"}`}>
         <img
-          src={plantImage}
+          src={cabinetImage}
           alt="Authentication Background"
           className="authentication-image"
         />

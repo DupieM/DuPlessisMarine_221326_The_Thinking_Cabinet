@@ -212,7 +212,7 @@ function CabinetAIPost() {
 
       {/* Display images */}
       <div className="image-grid">
-        <p className="subheading">Images in your collection</p>
+        <p className="subheading">Images in your cabinet</p>
         {images.map((img, index) => (
           <img key={index} src={img.url} alt={img.name} className="story_image"/>
         ))}
@@ -226,7 +226,7 @@ function CabinetAIPost() {
         <p>{narrative}</p>
       </div>
 
-      <button className="btn_save" onClick={() => setShowPopup(true)}>Create Collection</button>
+      <button className="btn_save" onClick={() => setShowPopup(true)}>Create Cabinet</button>
       <button className="btn_generate" onClick={generateStory} style={{ marginLeft: '10px' }}>
         Generate Another Story
       </button>
@@ -236,7 +236,7 @@ function CabinetAIPost() {
       {showPopup && (
         <div className="welcome-modal">
           <div className="modal_content">
-            <h3 className="save_heading">Save your images and story to view later, enter your collection name below to save it.</h3>
+            <h3 className="save_heading">Save your images and story to view later, enter your cabinet name below to save it.</h3>
             <input
               type="text"
               value={collectionName}
@@ -273,21 +273,27 @@ function CabinetAIPost() {
           >
             <option value="">Pick a category...</option>
             {Object.keys(questions).map((category, idx) => (
-              <option key={idx} value={category}>{category}</option>
+              <option key={idx} value={category}>
+                {category}
+              </option>
             ))}
           </select>
 
-          <select
-            onChange={(e) => e.target.value && setUserMessage(e.target.value)}
-            className="dropdown2"
-          >
-            <option value="">Pick a question from category chosen above...</option>
-            {selectedCategory && questions[selectedCategory].map((question, idx) => (
-              <option key={idx} value={question}>{question}</option>
-            ))}
-            {!selectedCategory && <option value="" disabled>Please select a category first</option>}
-          </select>
+          {selectedCategory && (
+            <select
+              onChange={(e) => e.target.value && setUserMessage(e.target.value)}
+              className="dropdown2"
+            >
+              <option value="">Pick a question from category chosen above...</option>
+              {questions[selectedCategory].map((question, idx) => (
+                <option key={idx} value={question}>
+                  {question}
+                </option>
+              ))}
+            </select>
+          )}
         </div>
+
 
         <div className="chat-input-group">
           <input

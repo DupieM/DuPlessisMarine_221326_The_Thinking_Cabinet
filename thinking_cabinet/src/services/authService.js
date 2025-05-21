@@ -5,9 +5,9 @@ import { createUserInformation } from "./DbService";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 
 // Create an account
-export const signUpUser = async (name, email, password) => {
+export const signUpUser = async (name, email) => {
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(auth, email);
       const user = userCredential.user;
   
       // Update Firebase Auth Profile with Name
@@ -18,7 +18,6 @@ export const signUpUser = async (name, email, password) => {
       uid: user.uid,
       name: name,  // Store name in Firestore
       email: user.email,
-      password: password,
     });
   
       return user;
