@@ -7,7 +7,6 @@ import CabinetAIPre from './Pages/CabinetAI/SetUp/CabinetAI-pre';
 import BasicNavbar from './componements/navbar'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Outlet } from 'react-router';
-import Wunderchat from './Pages/Wunderchat/Wunderchat';
 import { SharedDataProvider } from './componements/SharedDataProvider';
 import CabinetAIPost from './Pages/CabinetAI/Reslut/CabinetAI-post';
 
@@ -18,7 +17,6 @@ function App() {
       <SharedDataProvider>
         <Routes>
           <Route path="/" element={<Authentications />} />
-          <Route path="/wunderchat" element={<Wunderchat />} />
           <Route
             element={
               <>

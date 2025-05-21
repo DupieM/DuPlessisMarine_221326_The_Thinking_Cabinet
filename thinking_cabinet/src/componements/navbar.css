@@ -2,3 +2,50 @@
     padding: 10px;
     background-color: #94A98A;
 }
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.navbar-center,
+.navbar-right {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-center {
+  flex: 1;
+  justify-content: right;
+  margin-right: 30px;
+}
+
+.nav-link-custom {
+  font-size: 18pt;
+  font-weight: 700;
+  color: #1B1D13;
+  text-decoration: none;
+}
+
+.nav-link-custom.active {
+  color: #D8D0BD;
+}
+
+.avatar-icon {
+  width: 40px;
+  cursor: pointer;
+  margin-right: 20px;
+}
+
+.logout-button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.logout-icon {
+  width: 35px;
+}

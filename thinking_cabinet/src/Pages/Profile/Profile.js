@@ -6,91 +6,117 @@ import { doc, updateDoc, getDoc, collection, getDocs } from 'firebase/firestore'
 import { onAuthStateChanged, updatePassword } from 'firebase/auth';
 import ScrollToTopButton from '../../componements/ScrollToTopButton';
 import { getStoryText } from '../../services/DbService';
+import { useLocation, useNavigate } from "react-router-dom";
+import { EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth';
 
 function Profile() {
-    const [image, setImage] = useState(null);
-    const fileInputRef = useRef(null);
-    const [user, setUser] = useState('');
-    const [uploading, setUploading] = useState(false);
-    const [userData, setUserData] = useState({ displayName: '', email: '', password: '' });
-    const [profileImageUrl, setProfileImageUrl] = useState('');
-    const [showPassword, setShowPassword] = useState(false);
-    const [collectionsData, setCollectionsData] = useState([]);
-    const [newPassword, setNewPassword] = useState('');
-    const [isEditingPassword, setIsEditingPassword] = useState(false);
-    const [passwordUpdateError, setPasswordUpdateError] = useState('');
-    const [passwordUpdateSuccess, setPasswordUpdateSuccess] = useState('');
+  const [image, setImage] = useState(null);
+  const fileInputRef = useRef(null);
+  const [user, setUser] = useState('');
+  const [uploading, setUploading] = useState(false);
+  const [userData, setUserData] = useState({ displayName: '', email: '', password: '' });
+  const [profileImageUrl, setProfileImageUrl] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [collectionsData, setCollectionsData] = useState([]);
+  const [newPassword, setNewPassword] = useState('');
+  const [isEditingPassword, setIsEditingPassword] = useState(false);
+  const [passwordUpdateError, setPasswordUpdateError] = useState('');
+  const [passwordUpdateSuccess, setPasswordUpdateSuccess] = useState('');
+  const [currentPassword, setCurrentPassword] = useState('');
 
-    const handleNewPasswordChange = (event) => {
-        setNewPassword(event.target.value);
-    };
+  const location = useLocation();
+  const { storyName, genre, images, narrative, chatMessages } = location.state || {};
+  const navigate = useNavigate();
 
-    const handleEditPasswordClick = () => {
-        setIsEditingPassword(true);
-        setPasswordUpdateError('');
-        setPasswordUpdateSuccess('');
-    };
+  const handleNewPasswordChange = (event) => {
+    setNewPassword(event.target.value);
+  };
 
-    const handleSavePasswordClick = async () => {
-        if (!user) {
-            setPasswordUpdateError('No user logged in.');
-            return;
-        }
-        if (newPassword.length < 6) {
-            setPasswordUpdateError('Password must be at least 6 characters long.');
-            return;
-        }
+  const handleEditPasswordClick = () => {
+    setIsEditingPassword(true);
+    setPasswordUpdateError('');
+    setPasswordUpdateSuccess('');
+  };
 
-        try {
-            await updatePassword(user, newPassword);
-            // Optionally, update the password in Firestore as well
-            const userDocRef = doc(db, 'users', user.uid);
-            await updateDoc(userDocRef, {
-                password: newPassword,
-            });
-            setPasswordUpdateSuccess('Password updated successfully!');
-            setIsEditingPassword(false);
-            setNewPassword('');
-        } catch (error) {
-            console.error('Error updating password:', error);
-            setPasswordUpdateError(error.message);
-        }
+  const handleSavePasswordClick = async () => {
+    setPasswordUpdateError('');
+    setPasswordUpdateSuccess('');
+
+    if (!user) {
+      setPasswordUpdateError('No user logged in.');
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      setPasswordUpdateError('Password must be at least 6 characters long.');
+      return;
+    }
+
+      try {
+        // Step 1: Reauthenticate
+        const credential = EmailAuthProvider.credential(user.email, currentPassword);
+        await reauthenticateWithCredential(user, credential);
+
+        // Step 2: Update password
+        await updatePassword(user, newPassword);
+
+        // (Optional) Update Firestore
+        const userDocRef = doc(db, 'users', user.uid);
+        await updateDoc(userDocRef, {
+          password: newPassword,
+        });
+
+        setPasswordUpdateSuccess('Password updated successfully!');
+        setIsEditingPassword(false);
+        setNewPassword('');
+        setCurrentPassword('');
+
+      } catch (error) {
+        console.error('Error updating password:', error);
+        if (error.code === 'auth/wrong-password') {
+          setPasswordUpdateError('Incorrect current password.');
+        } else if (error.code === 'auth/too-many-requests') {
+          setPasswordUpdateError('Too many failed attempts. Try again later.');
+        } else {
+          setPasswordUpdateError(error.message);
+          }
+      }
     };
 
     const handleCancelPasswordEdit = () => {
-        setIsEditingPassword(false);
-        setNewPassword('');
-        setPasswordUpdateError('');
-        setPasswordUpdateSuccess('');
+      setIsEditingPassword(false);
+      setNewPassword('');
+      setPasswordUpdateError('');
+      setPasswordUpdateSuccess('');
     };
 
     // Load user data
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, async (authUser) => {
-            if (authUser) {
-                setUser(authUser);
-                const userDocRef = doc(db, 'users', authUser.uid);
-                const userDocSnap = await getDoc(userDocRef);
+      const unsubscribe = onAuthStateChanged(auth, async (authUser) => {
+        if (authUser) {
+          setUser(authUser);
+          const userDocRef = doc(db, 'users', authUser.uid);
+          const userDocSnap = await getDoc(userDocRef);
 
-                if (userDocSnap.exists()) {
-                    const data = userDocSnap.data();
-                    setUserData({
-                        displayName: data.displayName || authUser.displayName || 'No name set',
-                        email: authUser.email,
-                        password: data.password || '',
-                    });
-                    setProfileImageUrl(data.profileImageUrl || '');
-                } else {
-                    setUserData({
-                        displayName: authUser.displayName || 'No name set',
-                        email: authUser.email,
-                        password: '',
-                    });
-                }
-            } else {
-                setUser(null);
-                setUserData({ displayName: '', email: '', password: '' });
-                setProfileImageUrl('');
+          if (userDocSnap.exists()) {
+            const data = userDocSnap.data();
+            setUserData({
+              displayName: data.displayName || authUser.displayName || 'No name set',
+              email: authUser.email,
+              password: data.password || '',
+            });
+            setProfileImageUrl(data.profileImageUrl || '');
+          } else {
+            setUserData({
+              displayName: authUser.displayName || 'No name set',
+              email: authUser.email,
+              password: '',
+            });
+          }
+          } else {
+              setUser(null);
+              setUserData({ displayName: '', email: '', password: '' });
+              setProfileImageUrl('');
             }
         });
 
@@ -209,6 +235,9 @@ function Profile() {
 
     return (
         <div className="App2">
+
+            <button className="story_button" onClick={() => navigate(-1)}>← Back to Story</button>
+
             <h2 className='Heading_one'>Update Profile</h2>
 
             {/* Profile Picture Section */}
@@ -250,16 +279,6 @@ function Profile() {
                         <strong>Password:</strong> <br/>
                         {!isEditingPassword ? (
                             <>
-                                {showPassword
-                                    ? ` ${userData.password}`
-                                    : ` ${'•'.repeat(userData.password.length || 0)}`
-                                }
-                                <button
-                                    onClick={() => setShowPassword(!showPassword)}
-                                    className="hide-password-button"
-                                >
-                                    {showPassword ? 'Hide' : 'Show'}
-                                </button>
                                 <button
                                     onClick={handleEditPasswordClick}
                                     className="edit-password-button"
@@ -269,6 +288,13 @@ function Profile() {
                             </>
                         ) : (
                             <>
+                                <input
+                                    type="password"
+                                    placeholder="Current Password"
+                                    value={currentPassword}
+                                    onChange={(e) => setCurrentPassword(e.target.value)}
+                                    className="current-password-input"
+                                />
                                 <input
                                     type="password"
                                     placeholder="New Password"
@@ -319,13 +345,13 @@ function Profile() {
                         </div>
 
                         {collection.images.length === 0 && (
-                            <p className="no-images-text">No images in this collection.</p>
+                            <p className="no-images-text">No images in this Cabinet.</p>
                         )}
                     </div>
                 ))}
 
                 {collectionsData.length === 0 && (
-                    <p className="no-collections-text">Collections Loading....</p>
+                    <p className="no-collections-text">Cabinets Loading....</p>
                 )}
             </div>
 

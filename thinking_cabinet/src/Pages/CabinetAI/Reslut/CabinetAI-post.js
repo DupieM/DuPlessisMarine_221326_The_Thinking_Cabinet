@@ -4,6 +4,7 @@ import { useSharedData } from "../../../componements/SharedDataProvider";
 import { createImageCollection, saveImageToFirestore, saveStoryToCollection } from "../../../services/DbService";
 import '../Reslut/CabinetAI-post.css';
 import ScrollToTopButton from "../../../componements/ScrollToTopButton";
+import { useNavigate } from "react-router-dom";
 
 const API_URL = "https://api.openai.com/v1/chat/completions";
 
@@ -20,6 +21,11 @@ function CabinetAIPost() {
   const [showPopup, setShowPopup] = useState(false);
   const [collectionName, setCollectionName] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+
+  const [isLoadingStory, setIsLoadingStory] = useState(false);
+  const [isSavingCabinet, setIsSavingCabinet] = useState(false);
+
+  const navigate = useNavigate();
 
   const [questions] = useState({
     Debater: [
@@ -86,6 +92,7 @@ function CabinetAIPost() {
   }, [images, genre, storyName]);
 
   const generateStory = async () => {
+      setIsLoadingStory(true); // show loader
       const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
       let imageDescriptions = "The story includes these images: ";
       images.forEach((img, i) => {
@@ -123,6 +130,8 @@ function CabinetAIPost() {
         setNarrative(generatedStory);
       } catch (error) {
         console.error("Error generating story:", error);
+      } finally {
+        setIsLoadingStory(false); // hide loader
       }
     };
 
@@ -175,6 +184,8 @@ function CabinetAIPost() {
       return;
     }
 
+    setIsSavingCabinet(true); // show loader
+
     try {
       // 1. Create the collection and get its ID
       const collectionId = await createImageCollection(userId, collectionName);
@@ -203,6 +214,8 @@ function CabinetAIPost() {
     } catch (error) {
       console.error("Error saving data:", error);
       alert("Failed to save the story and images.");
+    } finally {
+      setIsSavingCabinet(false); // hide loader
     }
   };
 
@@ -223,7 +236,11 @@ function CabinetAIPost() {
       {/* Generated story */}
       <div className="story_output">
         <h3 className="story_ouput_heading">{storyName}</h3>
-        <p>{narrative}</p>
+         {isLoadingStory ? (
+            <div className="spinner"></div>
+          ) : (
+            <p>{narrative}</p>
+          )}
       </div>
 
       <button className="btn_save" onClick={() => setShowPopup(true)}>Create Cabinet</button>
@@ -250,6 +267,11 @@ function CabinetAIPost() {
                 Cancel
               </button>
             </div>
+
+            {isSavingCabinet && (
+              <div className="spinner"></div>
+            )}
+
           </div>
         </div>
       )}
@@ -319,6 +341,24 @@ function CabinetAIPost() {
 
         
       </div>
+
+      <button
+        className="btn_generate"
+        style={{marginTop: '20px'}}
+        onClick={() =>
+          navigate("/profile", {
+            state: {
+              storyName,
+              genre,
+              images,
+              narrative,
+              chatMessages
+            },
+          })
+        }
+      >
+        Go to Profile
+      </button>
 
       <ScrollToTopButton />
 
