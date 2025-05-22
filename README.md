@@ -259,6 +259,12 @@ To see a run through of the application, click below:
 
 [View Demonstration]()
 
+### Promotional Video
+
+.........
+
+[Promo Video]()
+
 <!-- ROADMAP -->
 ## Roadmap
 
@@ -294,4 +300,5 @@ The Thinking CAbinet Rights reserved © 2025
 <!-- ACKNOWLEDGEMENTS -->
 ## Acknowledgements
 <!-- all resources that you used and Acknowledgements here -->
-* [??]()
+* [Firebase Documentation](https://firebase.google.com/docs?hl=en&authuser=1&_gl=1*oj3ulf*_ga*MTQzMDEzOTU3OS4xNzEyNTU2NTU1*_ga_CW55HF8NVT*MTcxODU1NTAxMS44NS4xLjE3MTg1NTgxMDAuNTkuMC4w)
+* [OpenAi Documentation](https://platform.openai.com/docs/concepts)
