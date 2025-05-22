@@ -62,7 +62,7 @@
 <!--PROJECT DESCRIPTION-->
 ## About the Project
 <!-- header image of project -->
-<img src="" alt="header image" width="580px">
+<img src="readme_images/header_image.png" alt="header image" width="580px">
 
 ### Project Description
 
@@ -117,14 +117,14 @@ To start the React app do the following steps:
 <!-- You can add the links to all of your imagery at the bottom of the file as references -->
 ## Features and Functionality
 
-![Authentication]()
+![Authentication](readme_images/Authentication.png)
 ### Authentication Page
 
 This page allows users to securely sign up with their name, email, and password or log in with their existing credentials. It includes client-side validation to ensure proper email formatting and password strength, and provides instant feedback for invalid input. Users are redirected to the home screen upon successful login or registration.
 
 </br>
 
-![Home Page]()
+![Home Page](readme_images/Home_Page.png)
 
 ### Home Page
 
@@ -132,7 +132,7 @@ This page welcomes users with an introductory message and explains the concept o
 
 </br>
 
-![CabinetAI_pre]()
+![CabinetAI_pre](readme_images/CabinetAI_pre.png)
 
 ### CabinetAI-pre Page
 
@@ -140,7 +140,7 @@ This page lets users upload images of their objects to build a â€œWunderkammerâ€
 
 </br>
 
-![CabinetAI_post]()
+![CabinetAI_post](readme_images/CabinetAI_post.png)
 
 ### CabinetAI-post Page
 
@@ -148,7 +148,7 @@ This page allows users to generate a short AI-written story based on their chose
 
 </br>
 
-![Profile]()
+![Profile](readme_images/Profile.png)
 
 ### Profile Page
 
@@ -168,18 +168,13 @@ The `Conceptual Process` is the set of actions, activities and research that was
 
 ### Wireframes
 
-<img src="" alt="Wireframe 1" width="700px">
+<img src="readme_images/Wireframe_one.png" alt="Wireframe 1" width="700px">
 </br>
-<img src="" alt="Wireframe 2" width="700px">
+<img src="readme_images/Wireframe_two.png" alt="Wireframe 2" width="700px">
 </br>
-<img src="" alt="Wireframe 3" width="700px">
+<img src="readme_images/Wireframe_three.png" alt="Wireframe 3" width="700px">
 </br>
-<img src="" alt="Wireframe 4" width="700px">
-</br>
-<img src="" alt="Wireframe 5" width="700px">
-</br>
-<img src="" alt="Wireframe 6" width="700px">
-</br>
+<img src="readme_images/Wireframe_four.png" alt="Wireframe 4" width="700px">
 
 ### User-flow
 
@@ -234,22 +229,19 @@ The `Development Process` is the technical implementations and functionality don
 
 ### Mockups
 
-![Mockup 1]()
+![Mockup 1](readme_images/Mockup_1.png)
 <br>
 
-![Mockup 2]()
+![Mockup 2](readme_images/Mockup_2.png)
 <br>
 
-![Mockup 3]()
+![Mockup 3](readme_images/Mockup_3.png)
 <br>
 
-![Mockup 4]()
+![Mockup 4](readme_images/Mockup_4.png)
 <br>
 
-![Mockup 5]()
-<br>
-
-![Mockup 6]()
+![Mockup 5](readme_images/Mockup_5.png)
 <br>
 
 <!-- VIDEO DEMONSTRATION -->
@@ -260,8 +252,6 @@ To see a run through of the application, click below:
 [View Demonstration]()
 
 ### Promotional Video
-
-.........
 
 [Promo Video]()
 
