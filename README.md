@@ -48,11 +48,12 @@
    * [Reviews and Testing](#peer-reviews)
         * [Reviews](#feedback-from-reviews)
         * [Unit Tests](#unit-tests)
+        * [UAT Tests](#uat-tests)
    * [Future Implementation](#peer-reviews)
 * [Final Outcome](#final-outcome)
     * [Mockups](#mockups)
     * [Video Demonstration](#video-demonstration)
-* [Conclusion](#conclusion)
+    * [Promotional Video](#promotional-video)
 * [Roadmap](#roadmap)
 * [Contributing](#contributing)
 * [License](#license)
@@ -66,7 +67,7 @@
 
 ### Project Description
 
-The Thinking Cabinet is an interactive digital platform that fosters reflective thinking and self-exploration. Users can upload meaningful object images, engage with AI to explore their significance, and generate thought-provoking responses. Alternatively, they can select predefined objects to instantly create stories or explore categorized themes through AI-driven conversations for inspiration, reflection, or curiosity.
+The Thinking Cabinet is an interactive digital platform in the form of a web application that fosters reflective thinking and self-exploration. Users can upload meaningful object images in their Wunderkammer and then engage with AI to explore their significance within a narrative chosen for a specific genre by the user. Thought-provoking responses can then be generated from predefined questions towards AI or the user can engage with AI by asking their own questions. These AI-driven conversations will lead to inspiration, reflection, or satisfying one’s own curiosity.
 
 ### Built With
 
@@ -74,6 +75,7 @@ The Thinking Cabinet is an interactive digital platform that fosters reflective 
 * <a href="https://reactnative.dev/">![Static Badge](https://img.shields.io/badge/react%20native-url?style=for-the-badge&logo=react&color=black)</a>
 * <a href="https://github.com/"> ![Static Badge](https://img.shields.io/badge/Github-url?style=for-the-badge&logo=github&color=purple)</a>
 * <a href="https://code.visualstudio.com/"> ![Static Badge](https://img.shields.io/badge/visual%20studio-url?style=for-the-badge&logo=visual%20studio&logoColor=blue&color=black&link=https%3A%2F%2Fcode.visualstudio.com%2F)</a>
+* <a href="https://openai.com/"> ![Static Badge](https://img.shields.io/badge/OpenAI-url?style=for-the-badge&logo=OpenAI&logoColor=black&color=white)</a>
 
 <!-- GETTING STARTED -->
 <!-- Make sure to add appropriate information about what prerequesite technologies the user would need and also the steps to install your project on their own mashines -->
@@ -85,7 +87,7 @@ The following instructions will get you a copy of the project up and running on 
 
 For development, you require to create an account on [Firebase](https://firebase.google.com/).
 
-### How to install
+## How to install
 
 ### Installation
 Clone the project repository as follow:
@@ -96,8 +98,8 @@ Clone the project repository as follow:
 
 To start the React app do the following steps:
 
-1. Go to Visual Studio code  </br>
-   Open your Visual Studio code then click on File and then click on Open folder.
+1. Go to Visual Studio Code  </br>
+   Open your Visual Studio Code then click on File and then click on Open folder.
     Then navigate to where you have cloned the repository and open it.
 
 2. Start terminal </br>
@@ -107,10 +109,10 @@ To start the React app do the following steps:
    Enter `npm install` to get all the dependencies
 
 4. Create your own .env file </br>
-    Depending on the AI technology you are using (Google/OpenAi) add your `Private Keys` that you generated on either technology to this file.
+    Depending on the AI technology you are using (Google/OpenAI) add your `Private Keys` that you generated on either technology to this file.
 
 5. Start the React App </br>
-   Enter `npm start` to start d
+   Enter `npm start` to start 
 
 
 <!-- FEATURES AND FUNCTIONALITY-->
@@ -128,23 +130,23 @@ This page allows users to securely sign up with their name, email, and password 
 
 ### Home Page
 
-This page welcomes users with an introductory message and explains the concept of the Wunderkammer a personalized cabinet of curiosities where users can upload images and generate AI-powered narratives. It also showcases a curated selection of collections created by other users, fostering inspiration and community engagement, while providing easy navigation to start creating your own collection.
+This page welcomes users with an introductory message and explains the concept of the Wunderkammer, a personalized cabinet of curiosities where users can upload images and generate AI-powered narratives. It also showcases a curated selection of collections created by other users, fostering inspiration while providing easy navigation to start creating your own collection.
 
 </br>
 
 ![CabinetAI_pre](readme_images/CabinetAI_pre.png)
 
-### CabinetAI-pre Page
+### CabinetAI Page One
 
-This page lets users upload images of their objects to build a “Wunderkammer” collection. Users can rename each image to help the AI generate better, more personalized stories. They then provide a story title and select a genre from a dropdown. Upon clicking "Create Story," this data (user ID, story name, genre, images) is saved in shared state and the user is navigated to the next step (/cabinetAI-post) to generate AI narratives for their collection.
+This page lets users upload images of their objects to build a “Wunderkammer” collection. Users must rename each image to help the AI generate better, more personalized stories. They then provide a story title and select a genre from a dropdown. Upon clicking "Create Story," this data (user ID, story name, genre, images) is saved in shared state and the user is navigated to the next step (/cabinetAI-post) to generate AI narratives for their collection.
 
 </br>
 
 ![CabinetAI_post](readme_images/CabinetAI_post.png)
 
-### CabinetAI-post Page
+### CabinetAI Page Two
 
-This page allows users to generate a short AI-written story based on their chosen genre and uploaded images. Users can interact with an AI assistant to ask questions about the story, save their story and images as a collection (“cabinet”) for later access, and navigate to their profile to review saved content. The page also supports regenerating stories and provides a categorized question prompt system to facilitate deeper story exploration.
+This page allows users to view the generated AI-written story based on their chosen genre and uploaded images. Users can interact with an AI assistant to ask questions about the story, save their story and images as a collection (“cabinet”) for later access, and navigate to their profile to review saved content. The page also supports regenerating stories and provides a categorized question prompt system to facilitate deeper story exploration.
 
 </br>
 
@@ -166,7 +168,7 @@ The `Conceptual Process` is the set of actions, activities and research that was
 </br>
 <img src="readme_images/moodboard.jpg" alt="Moodboard" width="1000px">
 
-### Wireframes
+### Planned Wireframes
 
 <img src="readme_images/Wireframe_one.png" alt="Wireframe 1" width="700px">
 </br>
@@ -193,36 +195,47 @@ The `Development Process` is the technical implementations and functionality don
 ### Implementation Process
 <!-- stipulate all of the functionality you included in the project -->
 
-* `OpenAI` was used to get generate the story and to be able to chat with AI
-* ``
+* `OpenAI` was used to generate the story and to be able to chat with AI
+* `React` was use to create the website
+* `Firebase` was used to store all data
 
 #### Highlights
 <!-- stipulated the highlight you experienced with the project -->
-* To be able to impliment to chat with AI aboit  astory that it has generated
-* To be able to let the user to update their password by creating a new one
-* To be able to let the user upload their own profile image and to also be able to save it
+* To be able to implement the chat function with AI to talk about the story that it generated
+* To be able to let the user update their password by creating a new one
+* To be able to let the user upload their own images (profile and objects) and to then save it in the database
 
 #### Challenges
 <!-- stipulated the challenges you faced with the project and why you think you faced it or how you think you'll solve it (if not solved) -->
-* Trying to figure out how the user will upload a pictures to website and then save it to firebase
-* Trying to find out how to save data locally to be able to get them from next page
-* Figuring out how by clicking on button that it already starts generating the story
-* Also figuring out 
+* Allowing the user to upload a pictures to the website and then save it to AFirebase
+* Saving data locally as to be able to display it on the next page
+* Interfacing with OpenAI while managing the page respone and displaying the right content
 
 ### Reviews & Testing
 <!-- stipulate how you've conducted testing in the form of peer reviews, feedback and also functionality testing, like unit tests (if applicable) -->
 #### Unit Tests
 
-`Unit Tests` were conducted to establish working functionality by my peers.
+`Unit Tests` were conducted to establish working functionality by myself.
 
-* `Kyle Onel` did a unit test of the whole websites and helped me point how how to fix my UI designs to make it more user friendly
-* `Tania` did a unit test to tets if all teh functionality was working perfectly.
+* `Test 1` of authentication to make sure that username and password validation works and that the sign up and log in function works
+* `Test 2` of confirming that displaying of cabinets of other users work
+* `Test 3` of confirming that the upload of images and renaming works and displaying of images in a carousel
+* `Test 4` of confirming that the OpenAi call works to generate story and to chat with AI
+* `Test 5` of confirming that the update of new password works and is being saved
+* `Test 6` of confirming that cabinets of current user displays with all the relevant data
+
+#### UAT Tests
+
+`User Acceptance Testing` were conducted to establish working functionality by my peers.
+
+* `Peer One` did a unit test of the whole website and helped me by pointing out how to fix my UI designs to make it more user friendly
+* `Peer TWo` did a unit test to test if all the functionality was working perfectly.
 
 ### Future Implementation
 <!-- stipulate functionality and improvements that can be implemented in the future. -->
 
-* To make that the user can also upload more images on the CAbinetAi-post page to help generate new story and create new cabinet
-* To make my own coll loaders for generating and saving that looks like a cabinet that is moving.
+* To allow the user to add more images on the CabinetAI Page Two and then generate a new story and also a new cabinet.
+* To enhance the loaders as for the loader to look like a cabinet that is moving.
 
 <!-- MOCKUPS -->
 ## Final Outcome
