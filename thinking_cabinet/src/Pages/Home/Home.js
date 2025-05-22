@@ -129,7 +129,7 @@ function Home() {
                 </div>
                 <br />
 
-                <h2 className="heading">Collections by other users</h2>
+                <h2 className="heading">Cabinets by other users</h2>
                 <br />
 
                 <div className="collections-grid">
