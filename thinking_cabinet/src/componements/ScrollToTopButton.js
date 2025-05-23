@@ -18,6 +18,7 @@ const ScrollToTopButton = () => {
     return () => window.removeEventListener("scroll", toggleVisibility);
   }, []);
 
+  // Moves page to top once button is clicked
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,

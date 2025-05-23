@@ -10,11 +10,13 @@ import { getDocs, collection } from "firebase/firestore";
 import { db } from "../../firebase";
 
 function Home() {
+  // creating const varibles to call functions and data
     const [userId, setUserId] = useState("");
     const [showWelcome, setShowWelcome] = useState(false);
     const [usersCollections, setUsersCollections] = useState([]);
     const [isWunderkammerHovered, setIsWunderkammerHovered] = useState(false);
 
+    // UseEffect to get the current user that is logged in from Authentication
     useEffect(() => {
         const auth = getAuth();
         const user = auth.currentUser;
@@ -33,10 +35,12 @@ function Home() {
         }
     }, []);
 
+     // Get user collections to display on homepage
     useEffect(() => {
         fetchUsersWithCollections().then(data => setUsersCollections(data));
     }, []);
 
+     // Specify from user collections what we want to get and display on homne page
     const fetchUsersWithCollections = async () => {
         try {
             const usersRef = collection(db, "users");
@@ -81,10 +85,10 @@ function Home() {
         }
     };
 
+     // Handle the open and close of pop up window of wunderkammer
     const handleWunderkammerHover = () => {
         setIsWunderkammerHovered(true);
     };
-
     const handleWunderkammerMouseLeave = () => {
         setIsWunderkammerHovered(false);
     };

@@ -6,6 +6,7 @@ import cabinetImage from '../../assets/Cabinet.png';
 import bcrypt from 'bcryptjs'; // ✅ only if you're manually storing passwords (NOT Firebase Auth)
 
 function Authentications() {
+  // creating const varibles to call functions and data
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -16,10 +17,12 @@ function Authentications() {
   const [imageOnRight, setImageOnRight] = useState(false);
   const navigate = useNavigate();
 
+  // Makes sure that a valid email is used for Login and Sign Up
   const validateEmail = (email) => {
     return email.includes("@") && email.endsWith(".com");
   };
 
+  // Fuction that allows for user to be created or logged in on authnetication page
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -64,6 +67,7 @@ function Authentications() {
     }
   };
 
+  // The toggle form that allows to switch between Login and Sig Up forms
   const toggleForm = () => {
     setIsSignUp(!isSignUp);
     setImageOnRight(!imageOnRight);

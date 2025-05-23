@@ -10,10 +10,12 @@ import icon2 from './logout.png';
 import logo from './LOGO.png';
 
 function BasicNavbar() {
+  // creating const varibles to call functions and data
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Help to determine when current user is logged out
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((currentUser) => {
       setUser(currentUser);
@@ -22,6 +24,7 @@ function BasicNavbar() {
     return () => unsubscribe();
   }, []);
 
+  // Handle function to log out a user succesfully
   const handleLogout = async () => {
     try {
       await signOut(auth);
@@ -31,6 +34,7 @@ function BasicNavbar() {
     }
   };
 
+  // States that both pages of CAbinetAI for navbar show active with "CabinetAI"
   const isCabinetActive =
     location.pathname === "/cabinetAI-pre" || location.pathname === "/cabinetAI-post";
 

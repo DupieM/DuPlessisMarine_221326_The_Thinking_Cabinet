@@ -178,16 +178,6 @@
     margin-left: 0px;
 }
 
-.footer {
-    margin-top: 90px;
-    padding: 15px;
-    background-color: #94A98A;
-}
-
-.footer_text {
-    font-size: 16pt;
-}
-
 .image_box {
   width: 120px;
   flex-shrink: 0;
@@ -224,4 +214,14 @@
   box-sizing: border-box;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.footer {
+    margin-top: 90px;
+    padding: 15px;
+    background-color: #94A98A;
+}
+
+.footer_text {
+    font-size: 16pt;
 }

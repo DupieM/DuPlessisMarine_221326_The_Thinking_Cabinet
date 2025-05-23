@@ -6,6 +6,7 @@ import '../SetUp/CabinetAI-pre.css';
 import ScrollToTopButton from "../../../componements/ScrollToTopButton";
 
 function CabinetAIPre() {
+  // creating const varibles to call functions and data
   const { setSharedData } = useSharedData();
   const [userId, setUserId] = useState("");
   const [tempImageList, setTempImageList] = useState([]);
@@ -14,6 +15,7 @@ function CabinetAIPre() {
 
   const navigate = useNavigate();
 
+  // Help set the id of current user to create all collections
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((currentUser) => {
       setUserId(currentUser?.uid);
@@ -21,6 +23,7 @@ function CabinetAIPre() {
     return () => unsubscribe();
   }, []);
 
+  // Handle open of fiel explorer and uploading the images
   const handleUpload = (e) => {
     const files = Array.from(e.target.files);
     files.forEach((file) => {
@@ -35,6 +38,7 @@ function CabinetAIPre() {
     });
   };
 
+  // Function thta activates the create story from page one to page two 
   const handleCreateStory = () => {
     if (!storyName.trim() || !genre.trim()) {
       alert("Please enter a story name and select a genre!");

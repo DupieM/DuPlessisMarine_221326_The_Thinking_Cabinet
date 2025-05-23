@@ -10,6 +10,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth';
 
 function Profile() {
+  // creating const varibles to call functions and data
   const [image, setImage] = useState(null);
   const fileInputRef = useRef(null);
   const [user, setUser] = useState('');
@@ -28,16 +29,19 @@ function Profile() {
   const { storyName, genre, images, narrative, chatMessages } = location.state || {};
   const navigate = useNavigate();
 
+  // Const variable to set the new password
   const handleNewPasswordChange = (event) => {
     setNewPassword(event.target.value);
   };
 
+  // handles all the edit functions for the new password
   const handleEditPasswordClick = () => {
     setIsEditingPassword(true);
     setPasswordUpdateError('');
     setPasswordUpdateSuccess('');
   };
 
+  // Function to make and save new password of the user
   const handleSavePasswordClick = async () => {
     setPasswordUpdateError('');
     setPasswordUpdateSuccess('');
@@ -83,6 +87,7 @@ function Profile() {
       }
     };
 
+    // Handles when the password is changed
     const handleCancelPasswordEdit = () => {
       setIsEditingPassword(false);
       setNewPassword('');
@@ -132,6 +137,8 @@ function Profile() {
                 return;
             }
             console.log('Fetching collections for user:', user.uid);
+
+            // To get all the collections from Firebase for current user
             try {
                 const collectionsRef = collection(db, 'users', user.uid, 'collections');
                 const snapshot = await getDocs(collectionsRef);
@@ -151,6 +158,7 @@ function Profile() {
                     const collectionName = collectionDoc.data().collectionName || collectionId;
                     console.log('Processing collection:', collectionId, 'Name:', collectionName);
 
+                    // Extract image data
                     const imagesRef = collection(db, 'users', user.uid, 'collections', collectionId, 'images');
                     const imagesSnapshot = await getDocs(imagesRef);
                     const collectionImages = imagesSnapshot.docs
@@ -161,10 +169,10 @@ function Profile() {
                         }));
                     console.log('Images for collection', collectionId, ':', collectionImages);
 
+                    // Extract story data, accessing the title and narrative
                     const storyRef = collection(db, 'users', user.uid, 'collections', collectionId, 'stories');
                     const storySnapshot = await getDocs(storyRef);
 
-                    // Extract story data, accessing the title and narrative
                     const collectionStories = storySnapshot.docs
                         .map(doc => ({
                             id: doc.id,
@@ -193,6 +201,7 @@ function Profile() {
         fetchUserCollectionsData();
     }, [user]);
 
+    // Handle the change of imnage fromn file input
     const handleImageChange = (event) => {
         const file = event.target.files[0];
         if (file) {
@@ -200,10 +209,12 @@ function Profile() {
         }
     };
 
+    // Handle click function to open file explorer
     const handleClick = () => {
         fileInputRef.current.click();
     };
 
+    // Function the upload of image and displaying it on the screen
     const handleUpload = async () => {
         if (!image || !user) {
             console.error("No image selected or user not logged in.");

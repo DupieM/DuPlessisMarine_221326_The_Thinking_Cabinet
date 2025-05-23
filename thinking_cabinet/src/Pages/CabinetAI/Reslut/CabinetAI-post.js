@@ -12,6 +12,7 @@ function CabinetAIPost() {
 
   const chatContainerRef = useRef(null);
 
+  // creating const varibles to call functions and data
   const { sharedData } = useSharedData();
   const { storyName, genre, images, userId } = sharedData;
 
@@ -27,6 +28,7 @@ function CabinetAIPost() {
 
   const navigate = useNavigate();
 
+  // Predefined Questions under each category
   const [questions] = useState({
     Debater: [
       "What assumptions does the main character make, and are they justified?",
@@ -82,6 +84,7 @@ function CabinetAIPost() {
 
   const [selectedCategory, setSelectedCategory] = useState("");
 
+  // Alklows for page to automnatically move up when landing on page
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -91,6 +94,7 @@ function CabinetAIPost() {
     generateStory();
   }, [images, genre, storyName]);
 
+  // Function to generate my story with data from previous opage with OpenAI
   const generateStory = async () => {
       setIsLoadingStory(true); // show loader
       const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
@@ -135,13 +139,14 @@ function CabinetAIPost() {
       }
     };
 
+    // Function to allow to stay by new question when geneerating new ones
   useEffect(() => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
   }, [chatMessages]);
 
-
+  // Functions that handle the chat with AI based off of the story that is generated
   const handleChat = async () => {
     if (!userMessage.trim()) return;
 
@@ -178,6 +183,7 @@ function CabinetAIPost() {
     }
   };
 
+  // Function thath handle when a user save stheir cabinet to Firebase with images and narrative
   const handleSubmit = async () => {
     if (!collectionName.trim()) {
       alert("Please enter a collection name.");
