@@ -266,7 +266,7 @@ To see a run through of the application, click below:
 
 ### Promotional Video
 
-[Promo Video]()
+[Promo Video](https://drive.google.com/file/d/1SvUdn86kQIHKWUNLxVaMFvwehxWjDclc/view?usp=sharing)
 
 <!-- ROADMAP -->
 ## Roadmap
